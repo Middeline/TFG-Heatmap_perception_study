@@ -71,7 +71,7 @@ def cluster_detection(method,data):
 def plot_heatmap(data, title, xlabel, ylabel, name, points, y):
         # create heatmap
     cmap = sns.color_palette('viridis', 11)
-    plt.subplots(figsize=(10,7))
+    plt.subplots(figsize=(10,7), dpi=100)
     sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
     if (points):
         plt.scatter(y[0], y[1], s=400, facecolors='none', edgecolors='r')
@@ -80,6 +80,7 @@ def plot_heatmap(data, title, xlabel, ylabel, name, points, y):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     #plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
+    #plt.tight_layout(pad=0.5)
     plt.show()
 
 
@@ -137,7 +138,7 @@ def generar_data(n_clus, estacions):
         #comprobar que no esten en los extremos para que no se corten
         while fuera_de_rango:
             clus = random.sample(range(estacions), 3) #(np.random.randint(estacions, size=(1, 3)))
-            if clus[0] > 10 and clus[0] < estacions-10 and clus[1] > 10 and clus[1] < estacions-10:
+            if clus[0] > 3 and clus[0] < estacions-3 and clus[1] > 10 and clus[1] < estacions-3:
                 fuera_de_rango = False
                 clusters.append(clus)
 
@@ -155,7 +156,7 @@ def generar_data(n_clus, estacions):
         #random.randint(0,15) or random.randint(25,40)
 
     #generate clusters
-    X, _ = make_blobs(n_samples = estacions*estacions, centers = clusters, cluster_std = 2)
+    X, _ = make_blobs(n_samples = estacions*estacions, centers = clusters, cluster_std = 1)
     # random_state, RandomState instance or None, default=None
     # cluster_std, float or array-like of float, default=1.0
 
@@ -187,10 +188,10 @@ def gaussian (data):
 
 def perlin_noise(n):
     shape = (n,n)
-    scale = 8.0
+    scale = 3
     octaves = 5 #number of levels of detail you want you perlin noise to have
-    persistence = 0.6 #number that determines how much each octave contributes to the overall shape (adjusts amplitude).
-    lacunarity = 9.0 #number that determines how much detail is added or removed at each octave (adjusts frequency)
+    persistence = 0.7 #0.6 #number that determines how much each octave contributes to the overall shape (adjusts amplitude).
+    lacunarity =  9 #9.0 #number that determines how much detail is added or removed at each octave (adjusts frequency)
 
     lol = random.randint(0, 1000)
     arrel = lol
@@ -198,14 +199,14 @@ def perlin_noise(n):
     world = np.zeros(shape)
     for i in range(shape[0]):
         for j in range(shape[1]):
-            world[i][j] = 20 + 70 * noise.pnoise2(i/scale,
+            world[i][j] = 20 + 100 * noise.pnoise2(i/scale,
                                         j/scale,
                                         octaves=octaves,
                                         persistence=persistence,
                                         lacunarity=lacunarity,
                                         repeatx=n,
                                         repeaty=n,
-                                        base=arrel)
+                                        base=0)  #arrel)
             if (world[i][j] < 0):
                 world[i][j] = 0
             elif (world[i][j] > 50):
@@ -247,7 +248,7 @@ print(array3d)
 '''
 
 name= str(num_clusters)+ "data" +str(i)
-plot_heatmap(heatmap, "Bikes per hour and station", "Horas", "Stations", name, 0, [])
+plot_heatmap(heatmap, "Number of bikes per hour and station", "Hours", "Stations", name, 0, [])
 #plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
 
 x = random.randint(5, estacions-5) + 0.5
@@ -255,7 +256,7 @@ print(x)
 y = random.randint(5, estacions-5) +0.5
 print(y)
 
-plot_heatmap(heatmap, "Bikes per hour and station",  "Horas", "Stations", name+"_points"+str(x)+"-"+str(y), 1, [x, y])
+plot_heatmap(heatmap, "Number of bikes per hour and station",  "Hours", "Stations", name+"_points"+str(x)+"-"+str(y), 1, [x, y])
 
 #name= "blurred"
 #plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
