@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Heatmaps User Study</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <div align="center">
+      <tr>
+        <td colspan="4">
+        </br>
+          {% if error %}
+          <table width="640" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error!</strong> {{ error }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </table>
+          {% endif %}
+        </td>
+      </tr>
+      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <p class="h3 text-center">
+              Heatmaps' Perception Study
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <div class="form-group">
+              <textarea class="form-control" text-align="justify" rows="25" readonly>
+First of all, Welcome!
+
+You are going to participate in a user study designed to find out how humans percieve Heatmap Charts. In order to do this, you will be asked to perform different tasks where you will have to determine the number of clusters represented in the different charts. The instructions of the tasks will be shown before each one.
+
+The study is organized as follows:
+
+- First, you will be asked to answer a demographic survey where you have to introduce some personal information (age, gender, quality of eyesight, etc.)
+
+- After that, there is a first introductory task (determine the number of clusters in different types of heatmap charts). This is a short task to evaluate your adequacy to continue with the rest of the test.
+
+- If you pass the introductory task, you will begin the next task (same exercise but with open values for the number of clusters).
+
+- Finally, a personal evaluation survey, to gather additional comments and opinions about the study.
+
+
+Further considerations
+-------------------------
+
+- Because this is a perceptual study, you should not use rulers or any other external tools to measure the lengths.
+
+- Do not press the back button of your browser while doing the test. Otherwise, your results may be compromised.
+
+- The average time to complete the study is about 15 minutes (10 - 15 seconds for each chart). However, you can spend as much time as you need to complete it.
+
+- The data collected will only be used for academical purposes. We do not ask for your identity, so you will remain anonymous.
+
+- If you complete the whole study (surveys, task 1 and task 2) and your results are sound (we will check them to know if you introduced random answers) you will be paid. Otherwise, there will be no reward. (When completing the study, you will receive the corresponding code to use in Prolific).
+
+- Due to the nature of the study, it does not result in risks to human health.
+
+              </textarea>
+            </div>
+          </td>
+        </tr>
+        <form name="formIndex" method="POST" action="/validateIndex/0?u={{ user }}">
+        <tr>
+          <td>
+          <!-- <td colspan="4">&nbsp;</td> -->
+            <div align="center">
+              <input type="checkbox" name="checkboxTerms" id="checkbox"/>
+              <label for="checkboxTerms">I accept the terms of the study stated above</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="25" cellspacing="10">
+              <tr>
+                <td>
+                  <div align="center">
+                    <button type="submit" name="Start-button" class="btn btn-primary">Start</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        </form>
+      </table>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title> Heatmaps User Study</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        function preventBack() {
+            window.history.forward();
+        }
+
+        setTimeout("preventBack()", 0);
+
+        window.onunload = function () { null };
+    </script>
+    
+    <!-- Botones ocultar mostrar imagen -->
+    <script>
+       function mostrar(id)
+       {
+          var objeto=document.getElementById(id)
+             objeto.style.display="block";
+       }
+       function ocultar(id)
+       {
+          var objeto=document.getElementById(id)
+             objeto.style.display="none";
+       }
+    </script>
+    <style>
+       .oculto {display:none;}
+    </style>
+
+  </head>
+
+  <body>
+    <div align="center">
+      <tr>
+        <td colspan="4">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> {{ error }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <form>
+             <div class="images" align= "center">
+               <img src="/static/proves/2data0_points25-18.png" id="contenido1">
+               <img src="/static/proves/2data0.png" class="oculto" id="contenido2">
+             </div>
+             <div class="buttons" align= "center">
+               <input type="button" class="btn btn-secondary" onclick="mostrar('contenido1') & ocultar('contenido2')" value="Show cell marker">
+               <input type="button" class="btn btn-secondary" onclick="mostrar('contenido2') & ocultar('contenido1')" value="Hide cell marker">
+             </div>
+          </form>
+        </tr>
+        <tr>
+          <form name="formTask" method="POST" action="/validateTask/{{ question_id }}?u={{ user }}">
+            <td>&nbsp;</td>
+          <td>
+            </br>
+            <p align="center">Num of Clusters</p>
+            <p align="center">
+              <input type="number" class="form-control" name="numberA" />
+            </p>
+            </br>
+            </br>
+            </br>
+          </td>
+          <td>
+            </br>
+            <p align="center">Value</p>
+            <p align="center">
+              <input type="number" class="form-control" name="numberB" />
+            </p>
+            </br>
+            </br>
+            </br>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="2" cellspacing="0">
+              <tr><td>
+                <div align="center">
+                  <input type="submit" class="btn btn-primary" name="Next-button" value="Next" />
+                </div>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+        </form>
+      </table>
+    </div>
+  </body>
+
+</html>

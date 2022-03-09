@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title> Heatmaps User Study</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+  </head>
+
+  <body>
+    <div align="center">
+      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <p class="h3 text-center">
+              Task
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="480">
+            <p>&nbsp; </p>
+            <p class="h5 text-center">
+              </br>
+              In the next task, you will also have to determine the  </br>
+              number of clusters represented in the following Heatmap charts.
+              </br>
+              </br>
+              </br>
+              However, in this case, you will be asked to enter the values  </br>
+              for each chart in the boxes that will be shown        </br>
+              under the chart.
+              </br>
+              </br>
+              </br>
+              Previous studies determine that the average time to answer    </br>
+              each single value is about 5-7 seconds. However, take as much </br>
+              time as necessary to complete each assignment,                </br>
+              aiming at correctness, instead of speed.
+              </br>
+              </br>
+              </br>
+              Press the "Start" button when you are ready                   </br>
+              to begin the task.
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="11" cellspacing="10">
+              <tr>
+                <td>
+                  <div align="center">
+                    <form method="POST" action="/startTask/0?u={{ user }}">
+                      <button type="submit" name="Start-button" class="btn btn-primary">Start</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+
+</html>

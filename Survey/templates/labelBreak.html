@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title> Heatmaps User Study</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+  </head>
+
+  <body>
+    <div align="center">
+      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <p class="text-center"> Task progress </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{progress}}%" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="480">
+            <p>&nbsp; </p>
+            <p class="h5 text-center">
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+              It's time for a break!                                  </br>
+              </br>
+              </br>
+              </br>
+              When you are ready to continue,                         </br>
+              press the "Next" button.
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+              </br>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="24" cellspacing="0">
+              <tr>
+                <td>
+                  <div align="center">
+                    <form name="formTask" method="POST" action="/task/{{ question_id }}?u={{ user }}">
+                      <input type="submit" class="btn btn-primary" name="Next-button" value="Next" />
+                    </form>
+                  </div>
+                </td>
+            </tr>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+
+</html>

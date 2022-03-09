@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title> Heatmaps User Study </title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+  </head>
+
+  <body>
+    <div align="center">
+      <tr>
+        <td colspan="4">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> {{ error }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4"><img src="/static/instructions/{{ img_name }}.png" width="640" height="480" /></td>
+        </tr>
+        <tr>
+          <form name="formTask" method="POST" action="/validateInstr/{{ question_id }}?u={{ user }}">
+          <td>&nbsp;</td>
+          <td>
+            <p align="center"> Num of Clusters</p>
+            <p align="center">
+              <label>
+                <input type="radio" name="radioGroupA" value="{{ options_A[0] }}" />
+                {{ options_A[0] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupA" value="{{ options_A[1] }}" />
+                {{ options_A[1] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupA" value="{{ options_A[2] }}" />
+                {{ options_A[2] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupA" value="{{ options_A[3] }}" />
+                {{ options_A[3] }}
+              </label>
+              <br />
+            </p>
+          </td>
+          <td>
+            <p align="center"> Value </p>
+            <p align="center">
+              <label>
+                <input type="radio" name="radioGroupB" value="{{ options_B[0] }}" />
+                {{ options_B[0] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupB" value="{{ options_B[1] }}" />
+                {{ options_B[1] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupB" value="{{ options_B[2] }}" />
+                {{ options_B[2] }}
+              </label>
+              <br />
+              <label>
+                <input type="radio" name="radioGroupB" value="{{ options_B[3] }}" />
+                {{ options_B[3] }}
+              </label>
+              <br />
+            </p>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <table width="640" border="0" align="center" cellpadding="8" cellspacing="10">
+              <tr>
+                <td>
+                  <div align="center">
+                    <input type="submit" class="btn btn-primary" name="Next-button" value="Next" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        </form>
+      </table>
+    </div>
+  </body>
+
+</html>
