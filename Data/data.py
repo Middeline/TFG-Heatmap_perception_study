@@ -68,20 +68,21 @@ def cluster_detection(method,data):
     return clustering.labels_
 
 #plotting or related to it
-def plot_heatmap(data, title, xlabel, ylabel, name, points, y):
+def plot_heatmap(data, name, points, y):
         # create heatmap
     cmap = sns.color_palette('viridis', 11)
-    plt.subplots(figsize=(10,7), dpi=100)
+    plt.subplots(figsize=(6.25, 5), dpi=100) # 6,25 * 5 * 100 pixels
     sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
     if (points):
-        plt.scatter(y[0], y[1], s=400, facecolors='none', edgecolors='r')
+        plt.scatter(y[0], y[1], s=250, facecolors='none', edgecolors='r')
     plt.yticks(rotation=0)
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    #plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
+    plt.title("Bikes per station and time")
+    plt.xlabel("Time in a day")
+    plt.ylabel("Stations")
+    plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
     #plt.tight_layout(pad=0.5)
-    plt.show()
+    #plt.show()
+
 
 
 def plot_scatter_3d(X, labels):
@@ -188,9 +189,9 @@ def gaussian (data):
 
 def perlin_noise(n):
     shape = (n,n)
-    scale = 3
+    scale = 3.5
     octaves = 5 #number of levels of detail you want you perlin noise to have
-    persistence = 0.7 #0.6 #number that determines how much each octave contributes to the overall shape (adjusts amplitude).
+    persistence = 0.6 #0.6 #number that determines how much each octave contributes to the overall shape (adjusts amplitude).
     lacunarity =  9 #9.0 #number that determines how much detail is added or removed at each octave (adjusts frequency)
 
     lol = random.randint(0, 1000)
@@ -206,7 +207,7 @@ def perlin_noise(n):
                                         lacunarity=lacunarity,
                                         repeatx=n,
                                         repeaty=n,
-                                        base=0)  #arrel)
+                                        base= arrel)
             if (world[i][j] < 0):
                 world[i][j] = 0
             elif (world[i][j] > 50):
@@ -224,14 +225,19 @@ random.seed(time.time())
 
 i = int(sys.argv[1]) #per iteracio
 
-num_clusters = 2
+num_clusters = 0
 estacions = 30 #num d'estacions
 
-data = generar_data(num_clusters, estacions)
-#blurred = gaussian(data)
-heatmap = triplets_to_array(data, estacions)
+if (num_clusters == 0):
+    heatmap = perlin_noise(estacions)
+    heatmap = heatmap.astype(int)
+else:
+    data = generar_data(num_clusters, estacions)
+    #blurred = gaussian(data)
+    heatmap = triplets_to_array(data, estacions)
+
 name =  carpeta + str(num_clusters)+ "data" +str(i)+".csv"
-#np.savetxt(name, heatmap, delimiter=',')
+np.savetxt(name, heatmap, delimiter=',')
 
 heatmap_blurred = []
 for d in heatmap:
@@ -247,8 +253,8 @@ array3d = np.array(array3d)
 print(array3d)
 '''
 
-name= str(num_clusters)+ "data" +str(i)
-plot_heatmap(heatmap, "Number of bikes per hour and station", "Hours", "Stations", name, 0, [])
+name = str(num_clusters)+ "data" +str(i)
+plot_heatmap(heatmap, carpeta+name, 0, [])
 #plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
 
 x = random.randint(5, estacions-5) + 0.5
@@ -256,40 +262,25 @@ print(x)
 y = random.randint(5, estacions-5) +0.5
 print(y)
 
-plot_heatmap(heatmap, "Number of bikes per hour and station",  "Hours", "Stations", name+"_points"+str(x)+"-"+str(y), 1, [x, y])
+name2 = name+"points_" + str(int(x)) + "-" + str(int(y))
 
-#name= "blurred"
-#plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
-#plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
+plot_heatmap(heatmap, carpeta+name2, 1, [x, y])
 
 
+#CLUSTER DETECTION
+'''
 labels = cluster_detection(0, data)
 print(Counter(labels).keys()) # equals to list(set(words))
 
-#print("labels")
-#labels2 = cluster_detection(0, array3d)
-#print(Counter(labels2).keys()) # equals to list(set(words))
-
-#0 -> DBSCAN
-#1 -> HDBSCAN
-#2 -> KMEANS
-
-#get the frequency count of the non-negative labels (-1 = noise)
-#print(Counter(labels).values()) # counts the elements' frequency
-
 heatmap_clusters = build_heatmap(data, labels, estacions)
-#heatmap_noise_clus = build_heatmap(array3d, labels2, estacions)
+heatmap_noise_clus = build_heatmap(array3d, labels2, estacions)
+'''
 
-name = "cluster_detection_"+str(i)
-#plot_heatmap(heatmap_clusters, "Cluster Detection", "Hours", "Stations", name)
-
-#name = "cluster_noise_detection_"+str(i)
-#plot_heatmap(heatmap_noise_clus, "Cluster w Noise Detection", "Hours", "Stations", name)
 
 
 #---------KERNEL SCRIPT -------------
 '''
-for ((a = 0; a < 21; a++)); do
-    python3 data_w_perlin.py $a;
+for ((a = 0; a < 10; a++)); do
+    python3 data.py $a;
 done;
 '''
