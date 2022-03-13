@@ -72,11 +72,14 @@ def plot_heatmap(data, name, points, y):
         # create heatmap
     cmap = sns.color_palette('viridis', 11)
     plt.subplots(figsize=(6.25, 5), dpi=100) # 6,25 * 5 * 100 pixels
-    sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
+    g =sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
     if (points):
-        plt.scatter(y[0], y[1], s=250, facecolors='none', edgecolors='r')
+        plt.scatter(y[0], y[1], s=170, facecolors='none', edgecolors='r')
     plt.yticks(rotation=0)
-    plt.title("Bikes per station and time")
+    #x = np.round_(np.linspace(1, 24, 3), 1)
+    #print(x)
+    #plt.xticks(range(len(x)), x, size = 6, rotation = 45)
+    plt.title("Bikes per station in a day  ")
     plt.xlabel("Time in a day")
     plt.ylabel("Stations")
     plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
@@ -143,7 +146,7 @@ def generar_data(n_clus, estacions):
                 fuera_de_rango = False
                 clusters.append(clus)
 
-    print(clusters)
+    #print(clusters)
 
     for dim in clusters:
         #poso el 3r valor com a màxim 50 (bicis per estació)
@@ -225,7 +228,7 @@ random.seed(time.time())
 
 i = int(sys.argv[1]) #per iteracio
 
-num_clusters = 0
+num_clusters = 3
 estacions = 30 #num d'estacions
 
 if (num_clusters == 0):
@@ -236,7 +239,7 @@ else:
     #blurred = gaussian(data)
     heatmap = triplets_to_array(data, estacions)
 
-name =  carpeta + str(num_clusters)+ "data" +str(i)+".csv"
+name =  carpeta + str(num_clusters) +"/" +str(num_clusters)+ "data" +str(i)+".csv"
 np.savetxt(name, heatmap, delimiter=',')
 
 heatmap_blurred = []
@@ -254,17 +257,19 @@ print(array3d)
 '''
 
 name = str(num_clusters)+ "data" +str(i)
-plot_heatmap(heatmap, carpeta+name, 0, [])
+plot_heatmap(heatmap, carpeta+ str(num_clusters) +"/"+name, 0, [])
 #plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
 
-x = random.randint(5, estacions-5) + 0.5
+x = random.randint(5, estacions-5)
 print(x)
-y = random.randint(5, estacions-5) +0.5
+y = random.randint(5, estacions-5)
 print(y)
+value = heatmap[y,x]
+print(value)
 
-name2 = name+"points_" + str(int(x)) + "-" + str(int(y))
+name2 = name+"points_" + str(value)
 
-plot_heatmap(heatmap, carpeta+name2, 1, [x, y])
+plot_heatmap(heatmap, carpeta+ str(num_clusters) +"/"+name2, 1, [x+0.5, y+0.5])
 
 
 #CLUSTER DETECTION
