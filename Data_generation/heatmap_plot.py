@@ -5,9 +5,20 @@ import seaborn as sns
 
 #–----------------------------------------------------------------------------
 #plotting or related to it
-def plot_heatmap(data, name, points, y):
+def plot_heatmap(data, name, points, y, cont):
         # create heatmap
-    cmap = sns.color_palette('viridis', 11)
+    if cont:
+        if reverse:
+            cmap = sns.color_palette('viridis_r', as_cmap=True)
+        else:
+            cmap = sns.color_palette('viridis', as_cmap=True)
+    else:
+        if reverse:
+            cmap = sns.color_palette('viridis_r', 11)
+        else:
+            cmap = sns.color_palette('viridis', 11)
+
+
     plt.subplots(figsize=(6.25, 5), dpi=100) # 6,25 * 5 * 100 pixels
     sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
     if (points):
@@ -40,10 +51,12 @@ def point_marker(carpeta, name):
         points = [x+0.5, y+0.5]
 
         value = heatmap_transposed[x][y]
-        plot_heatmap(heatmap_transposed, folder + name + "_marker_" + str(int(value)) + "_transposed_" + str(i), 1, points)
+        plot_heatmap(heatmap_transposed, folder + "cont/" + name + "_marker_" + str(int(value)) + "_transposed_" + str(i), 1, points, 1)
+        plot_heatmap(heatmap_transposed, folder + "disc/" + name + "_marker_" + str(int(value)) + "_transposed_" + str(i), 1, points, 0)
 
         value = heatmap[y][x]
-        plot_heatmap(heatmap, folder + name + "_marker_" + str(int(value)) + "_" + str(i), 1, points)
+        plot_heatmap(heatmap, folder + "cont/" + name + "_marker_" + str(int(value)) + "_" + str(i), 1, points, 1)
+        plot_heatmap(heatmap, folder + "disc/" + name + "_marker_" + str(int(value)) + "_" + str(i), 1, points, 0)
 
 
     '''
@@ -101,18 +114,26 @@ def transpose_heatmap(carpeta, plot_name):
     heatmap_transposed = np.transpose(heatmap)
 
     plot_name = plot_name + "_transposed"
-    plot_heatmap(heatmap_transposed, carpeta + plot_name, 0, [])
+    plot_heatmap(heatmap_transposed, carpeta + plot_name + "_cont", 0, [], 1)
+    plot_heatmap(heatmap_transposed, carpeta + plot_name + "_disc", 0, [], 0)
 
 #–----------------------------------------------------------------------------
 
-transpose = False
+reverse = False
 
-for a in range(3, 4):
+for a in range(0, 4):
     for b in range(10):
         init(a, b)
         carpeta = "data/" + str(a) + "/plots/"
         plot_name = str(a) + "heatmap" + str(b)
-        plot_heatmap(heatmap, carpeta + plot_name, 0, [])
+        plot_heatmap(heatmap, carpeta + plot_name + "_cont", 0, [], 1)
+        plot_heatmap(heatmap, carpeta + plot_name + "_disc", 0, [], 0)
         transpose_heatmap(carpeta, plot_name)
+        reverse = True
+        plot_heatmap(heatmap, carpeta + plot_name + "_RPalette_cont", 0, [], 1)
+        plot_heatmap(heatmap, carpeta + plot_name + "_RPalette_disc", 0, [], 0)
+        reverse = False
+
+
         point_marker(carpeta, plot_name)
         #encercla un valor per cada interval 0-13, 14-25, 26-38, 38-50
