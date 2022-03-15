@@ -70,7 +70,7 @@ def cluster_detection(method,data):
 #plotting or related to it
 def plot_heatmap(data, name, points, y):
         # create heatmap
-    cmap = sns.color_palette('viridis', 11)
+    cmap = sns.color_palette('viridis', as_cmap=True)# to get discrete palette , 11)
     plt.subplots(figsize=(6.25, 5), dpi=100) # 6,25 * 5 * 100 pixels
     g =sns.heatmap(data, cmap = cmap) # palettes: viridis, viridis_r
     if (points):
@@ -82,9 +82,9 @@ def plot_heatmap(data, name, points, y):
     plt.title("Bikes per station in a day  ")
     plt.xlabel("Time in a day")
     plt.ylabel("Stations")
-    plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
+    #plt.savefig(name, bbox_inches='tight') #(carpeta+name) #remove margins
     #plt.tight_layout(pad=0.5)
-    #plt.show()
+    plt.show()
 
 
 
@@ -192,7 +192,10 @@ def gaussian (data):
 
 def perlin_noise(n):
     shape = (n,n)
-    scale = 3.5
+    if (num_clusters == 0):
+        scale = 2
+    else:
+        scale = 3.5 # 2 if cluster = 0
     octaves = 5 #number of levels of detail you want you perlin noise to have
     persistence = 0.6 #0.6 #number that determines how much each octave contributes to the overall shape (adjusts amplitude).
     lacunarity =  9 #9.0 #number that determines how much detail is added or removed at each octave (adjusts frequency)
@@ -261,11 +264,8 @@ plot_heatmap(heatmap, carpeta+ str(num_clusters) +"/"+name, 0, [])
 #plot_heatmap(heatmap_blurred, "Bikes per hour and station", "Horas", "Stations", name)
 
 x = random.randint(5, estacions-5)
-print(x)
 y = random.randint(5, estacions-5)
-print(y)
 value = heatmap[y,x]
-print(value)
 
 name2 = name+"points_" + str(value)
 
@@ -280,6 +280,7 @@ print(Counter(labels).keys()) # equals to list(set(words))
 heatmap_clusters = build_heatmap(data, labels, estacions)
 heatmap_noise_clus = build_heatmap(array3d, labels2, estacions)
 '''
+print(i)
 
 
 #---------KERNEL SCRIPT -------------

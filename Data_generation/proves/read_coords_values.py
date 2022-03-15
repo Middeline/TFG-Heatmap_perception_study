@@ -5,6 +5,7 @@ import seaborn as sns
 
 
 #–----------------------------------------------------------------------------
+
 #plotting or related to it
 def plot_heatmap(data, name, points, y):
         # create heatmap
@@ -22,10 +23,10 @@ def plot_heatmap(data, name, points, y):
 
 #–----------------------------------------------------------------------------
 
-
 def init():
     #read CSV
-    heatmap = np.genfromtxt('2data0.csv', delimiter=',')
+    global heatmap
+    heatmap = np.genfromtxt('2data8.csv', delimiter=',')
     estacions = len(heatmap[0])
 
     x = random.randint(5, estacions-5)
@@ -38,15 +39,13 @@ def init():
     points_trans = [y+0.5, x+0.5]
     plot_heatmap(heatmap_transposed, "heatmap_transposed", 1, points_trans)
 
-
 #–----------------------------------------------------------------------------
 
 def read_coords():
         # importing the module
     import cv2
     from PIL import Image
-    CoordX = 0
-    CoordY = 0
+
 
     def click_event(event, x, y, flags, params):
         # checking for left mouse clicks
@@ -54,12 +53,12 @@ def read_coords():
             print("Pixels ", x, ' ', y) # displaying the coordinates
             rgb_pixel_value = red_image_rgb.getpixel((x, y)) #Get color from (x, y) coordinates
             print("Color", rgb_pixel_value)
-            if(x != 0 and y!=0):
-                CoordX = x
-                CoordY = y
+            val = read_coords_value(x, y)
+            print("Value", val)
 
-    img = cv2.imread("2data0points_19-8.png", 1)    # reading the image
-    red_image = Image.open("2data0points_19-8.png")    #Create a PIL.Image object
+
+    img = cv2.imread("2data8points_14.png", 1)    # reading the image
+    red_image = Image.open("2data8points_14.png")    #Create a PIL.Image object
     red_image_rgb = red_image.convert("RGB")    #Convert to RGB colorspace
 
 
@@ -69,8 +68,6 @@ def read_coords():
     # and calling the click_event() function
     cv2.setMouseCallback('img', click_event)
     cv2.waitKey()   # wait for a key to be pressed to exit
-    print(CoordX, CoordY)
-    return([CoordX, CoordY])
 
 #–----------------------------------------------------------------------------
 
@@ -79,13 +76,14 @@ def read_coords_value(CoordX, CoordY):
     #flat_list = [item for sublist in t for item in sublist]
     x0 = 57
     y0 = 32
-    x = 388
-    y = 385
-    pixels = 13
-    for i in range(x0,x, pixels): #grafic
-        for j in range(y0,y, pixels): #grafic
-            print("falta completar")
 
+    a = int((CoordX-x0)/13)
+    b = int((CoordY-y0)/13)
+
+    Value = heatmap[b][a]
+    return(Value)
 
 #–----------------------------------------------------------------------------
+
 init()
+read_coords()
