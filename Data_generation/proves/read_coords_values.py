@@ -32,12 +32,12 @@ def init():
     x = random.randint(5, estacions-5)
     y = random.randint(5, estacions-5)
     points = [x+0.5, y+0.5]
-    plot_heatmap(heatmap, "heatmap", 1, points)
+    #plot_heatmap(heatmap, "heatmap", 1, points)
 
     #TRANSPOSE
     heatmap_transposed = np.transpose(heatmap)
     points_trans = [y+0.5, x+0.5]
-    plot_heatmap(heatmap_transposed, "heatmap_transposed", 1, points_trans)
+    #plot_heatmap(heatmap_transposed, "heatmap_transposed", 1, points_trans)
 
 #–----------------------------------------------------------------------------
 
