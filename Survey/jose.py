@@ -10,20 +10,20 @@ from wtforms.fields import StringField, SubmitField, RadioField
 from wtforms import validators
 
 
-NUM_CHARTS_INSTR = 2
-NUM_CHARTS_TASK = 1
-NUM_CHARTS_BETWEEN_BREAKS = 0
-ERRORS_ALLOWED_INSTR = 4
-ERROR_NO_TERMS_ACCEPTED = "You must accept the terms of the study to continue"
-ERROR_DEMO_SURVEY = "Please, fill in the survey again answering all the questions. Make sure that you introduce a valid age and a valid display size (if you know it)"
-ERROR_NO_OPTION = "Please, select a value for both Num of Clusters and Value"
-ERROR_VALUES = "Please, introduce a number for both Num of Clusters and Value in the range [0, 100]."
+
+NUM_CHARTS_INSTR = 4
+NUM_CHARTS_TASK = 60
+NUM_CHARTS_BETWEEN_BREAKS = 10
+ERRORS_ALLOWED_INSTR = 2
+ERROR_NO_TERMS_ACCEPTED = "You must accept the terms of the study to continue."
+ERROR_DEMO_SURVEY = "Please, fill in the survey again answering all the questions. Be sure that you introduce a valid age and a valid display size if you know it (e.g., 21.5, 23, etc.)."
+ERROR_NO_OPTION = "Please, select a value for both A and B."
+ERROR_VALUES = "Please, introduce a number for both A and B in the range [0, 100]."
 ERROR_EVAL_SURVEY = "Please, fill in the survey again answering at least the three first questions."
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///answers.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'la contrassenya es un parametre secret'
+app.config['SECRET_KEY'] = 'eres un torpedo! te da cuen?'
 db = SQLAlchemy(app)
 
 class AnswersData(db.Model):
@@ -51,7 +51,7 @@ class AnswersData(db.Model):
     abs_error_A = db.Column(db.Integer)         # Absolute error A
     abs_error_B = db.Column(db.Integer)         # Absolute error B
     time_spent  = db.Column(db.String(32))      # Time spent to answer
-    prolific_code  = db.Column(db.String(32))       # Prolific's  code
+    turk_code  = db.Column(db.String(32))       # Amazon's Turk code
 
 class Chart:
     def __init__(self, chart, val_A, val_B, options_A, options_B):
@@ -61,59 +61,73 @@ class Chart:
         self.options_A = options_A
         self.options_B = options_B
 
-LOL = 0
-
 #Input instructions
-charts_instr = [Chart('horizontal_filter_0', 3, 19, ['0', '2', '3', '4'], ['10', '20', '15', '22']),
-                Chart('horizontal_filter_1', 1, 23, ['0', '2', '3', '4'], ['10', '20', '15', '22']),
-                Chart('horizontal_filter_2', 3, 16, ['0', '2', '3', '4'], ['10', '20', '15', '22']),
-                Chart('horizontal_filter_3', 2, 17, ['0', '2', '3', '4'], ['10', '20', '15', '22']),
-                Chart('horizontal_filter_4', 3, 31, ['0', '2', '3', '4'], ['10', '20', '15', '22'])]
+charts_instr = [Chart('chart_solid', 50, 69, ['31', '59', '50', '39'], ['85', '71', '69', '58']),
+                Chart('chart_gradient', 55, 23, ['55', '39', '68', '56'], ['42', '23', '17', '43']),
+                Chart('chart_tufte', 70, 56, ['82', '70', '72', '81'], ['44', '56', '66', '69']),
+                Chart('chart_quant', 27, 47, ['40', '27', '46', '20'], ['33', '60', '47', '56'])]
 
 #Input task
-charts_task = [Chart('horizontal_filter_0', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_0', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_1', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_2', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_3', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_4', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_5', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_6', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_7', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_8', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_9', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_10', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_11', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_12', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_13', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_14', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_15', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_15', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_16', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_17', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_18', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_19', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_20', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_21', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_22', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_23', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_24', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_25', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_26', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_27', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_28', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_29', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_30', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_31', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_32', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_33', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_33', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_34', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_35', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_36', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_37', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_38', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
-               Chart('horizontal_filter_39', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1'])]
+charts_task = [Chart('chart_solid_0', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_0', 70, 13, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_1', 64, 52, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_2', 20, 61, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_3', 34, 18, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_4', 41, 70, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_5', 46, 38, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_6', 22, 37, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_7', 89, 95, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_8', 79, 3, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_9', 54, 46, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_10', 92, 61, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_11', 10, 73, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_12', 9, 52, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_solid_13', 30, 26, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_0', 55, 20, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_1', 92, 62, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_2', 9, 17, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_2', 9, 17, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_3', 4, 28, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_4', 78, 96, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_5', 9, 30, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_6', 96, 73, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_7', 79, 43, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_8', 30, 37, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_9', 34, 17, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_10', 33, 80, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_11', 48, 42, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_12', 54, 54, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_gradient_13', 84, 71, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_0', 18, 7, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_0', 18, 7, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_1', 89, 17, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_2', 16, 41, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_3', 75, 57, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_4', 9, 40, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_5', 67, 65, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_6', 12, 88, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_7', 87, 37, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_8', 54, 49, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_9', 63, 76, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_10', 93, 30, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_11', 43, 36, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_12', 55, 86, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_tufte_13', 30, 78, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_0', 60, 50, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_1', 89, 19, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_1', 89, 19, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_2', 34, 72, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_3', 80, 40, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_4', 27, 79, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_5', 68, 15, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_6', 16, 87, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_7', 73, 75, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_8', 38, 10, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_9', 92, 60, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_10', 11, 24, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_11', 43, 42, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_12', 4, 92, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1']),
+               Chart('chart_quant_13', 31, 51, ['-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1'])]
 
 
 # We have to use a dictionary for each user to preserve the global values when more than one
@@ -123,10 +137,10 @@ charts_task = [Chart('horizontal_filter_0', 70, 13, ['-1', '-1', '-1', '-1'], ['
 # dict_users[key][0] = charts task1 random order
 # dict_users[key][1] = charts task2 random order
 # dict_users[key][2] = start time used for each users
-# dict_users[key][3] = errors of the user in task 1 (instructions)
+# dict_users[key][3] = erros of the user in task 1 (instructions)
 # dict_users[key][4] = the user is currently in a break
 def modifyDictUsers(dictio, key_dict, elem, new_value_elem):
-    if dictio.__contains__(key_dict):
+    if dictio.has_key(key_dict):
         elem0 = dictio[key_dict][0]
         elem1 = dictio[key_dict][1]
         elem2 = dictio[key_dict][2]
@@ -169,14 +183,14 @@ def homepage():
     # dict_users[key][2] = start time used for each users
     # dict_users[key][3] = erros of the user in task 1 (instructions)
     # dict_users[key][4] = the user is currently in a break
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
 
     # We create the user id and randomize the images for both tasks
     random.seed(time.time())
     user = random.randint(0,100000000)
 
     # Check that the user does not exist
-    while DICT_USERS.__contains__(str(user)):
+    while DICT_USERS.has_key(str(user)):
         user = random.randint(0,100000000)
 
     random.seed(int(user))
@@ -200,6 +214,7 @@ def homepage():
     DICT_USERS.close()
 
     return redirect('/index/0?u='+str(user));
+
 
 #aux is a value that I won't use
 @app.route('/index/<int:aux>')
@@ -238,7 +253,7 @@ def validateIndex(aux):
         answersData.abs_error_A = -1
         answersData.abs_error_B = -1
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
+        answersData.turk_code = '-'
         db.session.add(answersData)
         db.session.commit()
 
@@ -260,7 +275,6 @@ def demoForm(aux):
 def validateDemoForm(aux):
     user = request.args.get('u', '')
 
-    meattherequirements = True
     allFieldsCompleted = True
     age = -1;
     ageOk = False
@@ -273,13 +287,9 @@ def validateDemoForm(aux):
     display = "Don't know"
     displayOk = True
 
-    LOL = (request.form['age'])
-
     if 'age' in request.form and len(request.form['age']) > 0:
         age = int(request.form['age'])
-        if age < 18:
-            meattherequirements = False
-        elif age >= 0 and age <= 150:
+        if age >= 0 and age <= 150:
             ageOk = True
     else:
         allFieldsCompleted = False
@@ -312,7 +322,7 @@ def validateDemoForm(aux):
             display = request.form['display']
 
 
-    if allFieldsCompleted and meattherequirements and ageOk and genderOk and educationOk and eyesightOk and displayOk:
+    if allFieldsCompleted and ageOk and genderOk and educationOk and eyesightOk and displayOk:
         answersData = AnswersData()
         answersData.date = str(dt.datetime.now().date())
         answersData.time = str(dt.datetime.now().time())
@@ -337,13 +347,11 @@ def validateDemoForm(aux):
         answersData.abs_error_A = -1
         answersData.abs_error_B = -1
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
+        answersData.turk_code = '-'
         db.session.add(answersData)
         db.session.commit()
 
         return redirect('/labelInstr/0?u='+str(user))
-    elif not meattherequirements:
-        return redirect('/labelEndFailure/0?u='+str(user))
     else:
         return render_template("demoForm.html", user=user, error=ERROR_DEMO_SURVEY)
 
@@ -356,7 +364,7 @@ def labelInstr(aux):
 #aux is a value that I won't use
 @app.route('/startInstr/<int:aux>', methods=['POST','GET'])
 def startInstr(aux):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
     # Begin to compute time just before starting the first chart
     DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 2, dt.datetime.now())
@@ -367,7 +375,7 @@ def startInstr(aux):
 
 @app.route('/instr/<int:question_id>')
 def instructions(question_id):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
 
     if question_id == NUM_CHARTS_INSTR:
@@ -394,7 +402,7 @@ def instructions(question_id):
 
 @app.route('/validateInstr/<int:question_id>', methods=['POST','GET'])
 def saveAnswersInstr(question_id):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
 
     if 'radioGroupA' in request.form and request.form['radioGroupA'] and len(request.form['radioGroupA']) > 0 and 'radioGroupB' in request.form and request.form['radioGroupB'] and len(request.form['radioGroupB']) > 0:
@@ -430,7 +438,7 @@ def saveAnswersInstr(question_id):
         answersData.abs_error_A = abs(val_radio_A - DICT_USERS[str(user)][0][question_id].val_A)
         answersData.abs_error_B = abs(val_radio_B - DICT_USERS[str(user)][0][question_id].val_B)
         answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
-        answersData.prolific_code = '-'
+        answersData.turk_code = '-'
         db.session.add(answersData)
         db.session.commit()
 
@@ -461,7 +469,7 @@ def labelTask(aux):
 #aux is a value that I won't use
 @app.route('/startTask/<int:aux>', methods=['POST','GET'])
 def startTask(aux):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
     # Begin to compute time just before starting the first chart
     DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 2, dt.datetime.now())
@@ -471,7 +479,7 @@ def startTask(aux):
 
 @app.route('/task/<int:question_id>', methods=['POST','GET'])
 def task(question_id):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
 
     if question_id == NUM_CHARTS_TASK:
@@ -494,7 +502,7 @@ def task(question_id):
 
 @app.route('/validateTask/<int:question_id>', methods=['POST','GET'])
 def saveAnswersTask(question_id):
-    DICT_USERS = shelve.open('persistent_info_web')
+    DICT_USERS = shelve.open('persistent_info_web.db')
     user = request.args.get('u', '')
 
     if 'numberA' in request.form and len(request.form['numberA']) > 0 and 'numberB' in request.form and len(request.form['numberB']) > 0:
@@ -531,7 +539,7 @@ def saveAnswersTask(question_id):
             answersData.abs_error_A = abs(val_number_A - DICT_USERS[str(user)][1][question_id].val_A)
             answersData.abs_error_B = abs(val_number_B - DICT_USERS[str(user)][1][question_id].val_B)
             answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
-            answersData.prolific_code = '-'
+            answersData.turk_code = '-'
             db.session.add(answersData)
             db.session.commit()
 
@@ -624,7 +632,7 @@ def validateEvalForm(aux):
         answersData.abs_error_A = -1
         answersData.abs_error_B = -1
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
+        answersData.turk_code = '-'
         db.session.add(answersData)
         db.session.commit()
 
@@ -637,14 +645,14 @@ def validateEvalForm(aux):
 @app.route('/labelEndSuccess/<int:aux>')
 def labelEndSuccess(aux):
     user = request.args.get('u', '')
-    prolific_code = random.randint(0,100000000)
+    amazon_code = random.randint(0,100000000)
 
     # Write the code in the DB
     answersData = AnswersData()
     answersData.date = str(dt.datetime.now().date())
     answersData.time = str(dt.datetime.now().time())
     answersData.user = user
-    answersData.task = 'prolific_code'
+    answersData.task = 'turk_code'
     answersData.age = -1
     answersData.gender = '-'
     answersData.education = '-'
@@ -664,13 +672,11 @@ def labelEndSuccess(aux):
     answersData.abs_error_A = -1
     answersData.abs_error_B = -1
     answersData.time_spent = '-'
-    answersData.prolific_code = str(prolific_code)
+    answersData.turk_code = str(amazon_code)
     db.session.add(answersData)
     db.session.commit()
 
-    print(LOL)
-
-    return render_template("labelEndSuccess.html", user=user, prolific_code=prolific_code)
+    return render_template("labelEndSuccess.html", user=user, turk_code=amazon_code)
 
 #aux is a value that I won't use
 @app.route('/labelEndFailure/<int:aux>')
@@ -681,6 +687,5 @@ def labelEndFailure(aux):
 
 if __name__ == "__main__":
     #random.seed(time.time())
-    app.run(debug=True)
-    print(LOL)
+    #app.run(debug=True)
     app.run()
