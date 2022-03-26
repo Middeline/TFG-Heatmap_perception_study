@@ -18,7 +18,7 @@ ERRORS_ALLOWED_INSTR = 4
 ERROR_NO_TERMS_ACCEPTED = "You must accept the terms of the study to continue"
 ERROR_DEMO_SURVEY = "Please, fill in the survey again answering all the questions. Make sure that you introduce a valid age and a valid display size (if you know it)"
 ERROR_NO_OPTION = "Please, select a value for both Num of Clusters and Value"
-ERROR_VALUES = "Please, introduce a number for both Num of Clusters and Value in the range [0, 100]."
+ERROR_VALUES = "Please, introduce a number for both Num of Clusters and Value in the range [0, 50]."
 ERROR_EVAL_SURVEY = "Please, fill in the survey again answering at least the three first questions."
 
 app = Flask(__name__)
@@ -43,58 +43,56 @@ class AnswersData(db.Model):
     satisfied           = db.Column(db.String(32))      # Satisfaction on the time spent
     comments            = db.Column(db.String(1000))    # Additional comments
     chart               = db.Column(db.String(255))     # Image shown
+    chart_marked        = db.Column(db.String(255))     # Image shown
     A_num_clust         = db.Column(db.Integer)         # Task A: Number of Clusters in the Chart
     A_ANS_num_clus      = db.Column(db.Integer)         # Task A: number of Clusters ANSWERED
     B_value_marker      = db.Column(db.Integer)         # B: Value of the marked cell
     B_ANS_value_marker  = db.Column(db.Integer)         # B: Value ANSWERED
-    #FALTA --> rgb_color???
     C_value_to_click    = db.Column(db.Integer)         # B: Value to pinpoint "click"
     C_ANS_value_clicked = db.Column(db.Integer)         # B: Value to pinpoint "click"
-    #FALTA --> rgb_color???
     error_A             = db.Column(db.Integer)         # Error A (Real Clusters - Num answered)
     error_B             = db.Column(db.Integer)         # Error B (Real Cell Value - Value answered)
     error_C             = db.Column(db.Integer)         # Error C (Real Value asked - Cell's Value clicked)
-    abs_error_A         = db.Column(db.Integer)         # Absolute error A
-    abs_error_B         = db.Column(db.Integer)         # Absolute error B
-    abs_error_C         = db.Column(db.Integer)         # Absolute error B
-    #error o diferencia en RGB del
     time_spent          = db.Column(db.String(32))      # Time spent to answer
     prolific_code       = db.Column(db.String(32))      # Prolific's  code FALTA --> I THINK I MAY NOT NEED THIS
 
-
+    # FALTA rgb color???
+    # NO al final he decidit estudiar el millor i pitjor cas i mirar els veins
 
 
 class intrChart: #Charts used in the introduction
-    def __init__(self, chart, A_numClus, B_valMark, C_valClick, A_optionsClus, B_optionsVal):
+    def __init__(self, chart, chart_marked, A_numClus, B_valMark, C_valClick, options_A, options_B):
         self.chart = chart
+        self.chart_marked = chart_marked
         self.A_numClus = A_numClus
         self.B_valMark = B_valMark
         self.C_valClick = C_valClick
-        self.A_optionsClus = A_optionsClus
-        self.B_optionsVal = B_optionsVal
+        self.options_A = options_A
+        self.options_B = options_B
 
 
 class taskChart: #Charts used in tasks
-    def __init__(self, chart, A_numClus, B_valMark, C_valClick):
+    def __init__(self, chart, chart_marked, A_numClus, B_valMark, C_valClick):
         self.chart = chart
+        self.chart_marked = chart_marked
         self.A_numClus = A_numClus
         self.B_valMark = B_valMark
         self.C_valClick = C_valClick
 
 
 #Input instructions
-charts_instr = [intrChart('0heatmap7_Blues_marker_35_0', 0, 35, 14,['1', '4', '0', '3'], ['22', '28', '35', '40']),
-                intrChart('1heatmap5_Blues_marker_31_0', 1, 31, 5, ['0', '2', '3', '1'], ['23', '30', '31', '42']),
-                intrChart('1heatmap5_Blues_marker_31_transposed_0', 1, 31, 42 ,['1', '4', '3', '2'], ['31', '27', '23', '38']),
-                intrChart('2heatmap6_Viridis_marker_23_0', 2, 23, 2, ['0', '2', '3', '1'], ['12', '17', '25', '23']),
-                intrChart('2heatmap8_Blues_marker_27_0', 2, 27, 23,['4', '1', '3', '2'], ['31', '21', '19', '27'])]
+charts_instr = [intrChart('0heatmap7_Blues_marker_35_0','0heatmap7_Blues_marker_35_0', 0, 35, 14,['1', '4', '0', '3'], ['22', '28', '35', '40']),
+                intrChart('1heatmap5_Blues_marker_31_0','1heatmap5_Blues_marker_31_0', 1, 31, 5, ['0', '2', '3', '1'], ['23', '30', '31', '42']),
+                intrChart('1heatmap5_Blues_marker_31_transposed_0','1heatmap5_Blues_marker_31_transposed_0', 1, 31, 42,['1', '4', '3', '2'], ['31', '27', '23', '38']),
+                intrChart('2heatmap6_Viridis_marker_23_0','2heatmap6_Viridis_marker_23_0', 2, 23, 2, ['0', '2', '3', '1'], ['12', '17', '25', '23']),
+                intrChart('2heatmap8_Blues_marker_27_0','2heatmap8_Blues_marker_27_0', 2, 27, 23,['4', '1', '3', '2'], ['31', '21', '19', '27'])]
 
 #Input task
-charts_task = [taskChart('0heatmap7_Blues_marker_35_0', 0, 35, 14),
-                taskChart('1heatmap5_Blues_marker_31_0', 1, 31, 5),
-                taskChart('1heatmap5_Blues_marker_31_transposed_0', 1, 31, 42),
-                taskChart('2heatmap6_Viridis_marker_23_0', 2, 23, 2),
-                taskChart('2heatmap8_Blues_marker_27_0', 2, 27, 23)]
+charts_task = [taskChart('0heatmap7_Blues_marker_35_0','0heatmap7_Blues_marker_35_0', 0, 35, 14),
+                taskChart('1heatmap5_Blues_marker_31_0', '1heatmap5_Blues_marker_31_0', 1, 31, 5),
+                taskChart('1heatmap5_Blues_marker_31_transposed_0', '1heatmap5_Blues_marker_31_transposed_0', 1, 31, 42),
+                taskChart('2heatmap6_Viridis_marker_23_0', '2heatmap6_Viridis_marker_23_0', 2, 23, 2),
+                taskChart('2heatmap8_Blues_marker_27_0', '2heatmap8_Blues_marker_27_0', 2, 27, 23)]
 
 
 # We have to use a dictionary for each user to preserve the global values when more than one
@@ -158,6 +156,7 @@ def homepage():
     user = random.randint(0,100000000)
 
     # Check that the user does not exist
+    #BORRAR
     while DICT_USERS.__contains__(str(user)):
         user = random.randint(0,100000000)
 
@@ -184,7 +183,7 @@ def homepage():
     return redirect('/index/0?u='+str(user));
 
 #####------------------------------------------------------------CAL REPASSAR--------------------------------------------------------
-##FALTA
+
 
 #aux is a value that I won't use
 @app.route('/index/<int:aux>')
@@ -215,6 +214,7 @@ def validateIndex(aux):
         answersData.comments = '-'
 
         answersData.chart = '-'
+        answersData.chart_marked = '-'
         answersData.A_num_clust = -1
         answersData.A_ANS_num_clus = -1
         answersData.B_value_marker = -1
@@ -224,9 +224,6 @@ def validateIndex(aux):
         answersData.error_A = -1
         answersData.error_B = -1
         answersData.error_C = -1
-        answersData.abs_error_A = -1
-        answersData.abs_error_B = -1
-        answersData.abs_error_C = -1
 
         answersData.time_spent = '-'
         answersData.prolific_code = '-'
@@ -270,7 +267,7 @@ def validateDemoForm(aux):
         age = int(request.form['age'])
         if age < 18:
             meattherequirements = False
-        elif age >= 0 and age <= 150:
+        elif age >= 0 and age <= 120:
             ageOk = True
     else:
         allFieldsCompleted = False
@@ -321,6 +318,7 @@ def validateDemoForm(aux):
         answersData.comments = '-'
 
         answersData.chart = '-'
+        answersData.chart_marked = '-'
         answersData.A_num_clust = -1
         answersData.A_ANS_num_clus = -1
         answersData.B_value_marker = -1
@@ -330,9 +328,6 @@ def validateDemoForm(aux):
         answersData.error_A = -1
         answersData.error_B = -1
         answersData.error_C = -1
-        answersData.abs_error_A = -1
-        answersData.abs_error_B = -1
-        answersData.abs_error_C = -1
 
         answersData.time_spent = '-'
         answersData.prolific_code = '-'
@@ -380,6 +375,7 @@ def instructions(question_id):
         img_name = DICT_USERS[str(user)][0][question_id].chart
         options_A = DICT_USERS[str(user)][0][question_id].options_A
         options_B = DICT_USERS[str(user)][0][question_id].options_B
+        C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
 
         # for key in DICT_USERS:
         #     print('user: '+key)
@@ -388,7 +384,7 @@ def instructions(question_id):
 
         DICT_USERS.close()
         return render_template("instructions.html", img_name=img_name, question_id=question_id, user=user,
-                                options_A=options_A, options_B=options_B)
+                                options_A=options_A, options_B=options_B, C_valClick=C_valClick )
 
 
 @app.route('/validateInstr/<int:question_id>', methods=['POST','GET'])
@@ -396,11 +392,12 @@ def saveAnswersInstr(question_id):
     DICT_USERS = shelve.open('persistent_info_users')
     user = request.args.get('u', '')
 
-    if 'radioGroupA' in request.form and request.form['radioGroupA'] and len(request.form['radioGroupA']) > 0 and 'radioGroupB' in request.form and request.form['radioGroupB'] and len(request.form['radioGroupB']) > 0:
+    if 'taskA' in request.form and request.form['taskA'] and len(request.form['taskA']) > 0 and 'taskB' in request.form and request.form['taskB'] and len(request.form['taskB']) > 0:
         # Save the answers in the DB
-        val_radio_A = int(request.form['radioGroupA'])
-        val_radio_B = int(request.form['radioGroupB'])
-
+        NumClusters = int(request.form['taskA'])
+        CellValue = int(request.form['taskB'])
+        CoordsC = 5 #int(request.form['taskC'])
+        #FALTA
         # Compute elapsed time in seconds
         stop_time = dt.datetime.now()
         elapsed_time = stop_time - DICT_USERS[str(user)][2]
@@ -409,7 +406,7 @@ def saveAnswersInstr(question_id):
         answersData.date = str(dt.datetime.now().date())
         answersData.time = str(dt.datetime.now().time())
         answersData.user = user
-        answersData.task = 'task 1'
+        answersData.task = 'intro task'
         answersData.age = -1
         answersData.gender = '-'
         answersData.education = '-'
@@ -421,14 +418,17 @@ def saveAnswersInstr(question_id):
         answersData.comments = '-'
 
         answersData.chart = DICT_USERS[str(user)][0][question_id].chart
-        answersData.A_num_clust = DICT_USERS[str(user)][0][question_id].val_A
-        answersData.A_ANS_num_clus = val_radio_A
-        answersData.B_value_marker = DICT_USERS[str(user)][0][question_id].val_B
-        answersData.B_ANS_value_marker = val_radio_B
-        answersData.error_A = val_radio_A - DICT_USERS[str(user)][0][question_id].val_A
-        answersData.error_B = val_radio_B - DICT_USERS[str(user)][0][question_id].val_B
-        answersData.abs_error_A = abs(val_radio_A - DICT_USERS[str(user)][0][question_id].val_A)
-        answersData.abs_error_B = abs(val_radio_B - DICT_USERS[str(user)][0][question_id].val_B)
+        answersData.chart_marked = DICT_USERS[str(user)][0][question_id].chart_marked
+        answersData.A_num_clust = DICT_USERS[str(user)][0][question_id].A_numClus
+        answersData.A_ANS_num_clus = NumClusters
+        answersData.B_value_marker = DICT_USERS[str(user)][0][question_id].B_valMark
+        answersData.B_ANS_value_marker = CellValue
+        answersData.C_value_to_click = DICT_USERS[str(user)][0][question_id].C_valClick
+        answersData.C_ANS_value_clicked = 4
+        answersData.error_A = NumClusters - DICT_USERS[str(user)][0][question_id].A_numClus
+        answersData.error_B = CellValue - DICT_USERS[str(user)][0][question_id].B_valMark
+        answersData.error_C = 4 - DICT_USERS[str(user)][0][question_id].C_valClick
+        ##FALTA VAL_RADIO_A
 
         answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
         answersData.prolific_code = '-'
@@ -436,7 +436,7 @@ def saveAnswersInstr(question_id):
         db.session.add(answersData)
         db.session.commit()
 
-        if answersData.abs_error_A > 10 or answersData.abs_error_B > 10:
+        if abs(answersData.error_A) > 10 or abs(answersData.error_B) > 10:
             errors_instr = DICT_USERS[str(user)][3] + 1
             DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 3, errors_instr)
             #DICT_USERS[str(user)][3] = DICT_USERS[str(user)][3] + 1
@@ -447,6 +447,8 @@ def saveAnswersInstr(question_id):
         DICT_USERS.close()
         return redirect('/instr/'+str(question_id+1)+'?u='+str(user))
     else:
+        #FALTA
+        #OPTIONS_A, OPTIONS_B?
         img_name = DICT_USERS[str(user)][0][question_id].chart
         options_A = DICT_USERS[str(user)][0][question_id].options_A
         options_B = DICT_USERS[str(user)][0][question_id].options_B
@@ -490,8 +492,9 @@ def task(question_id):
             DICT_USERS[str(user)][4] = False
 
         img_name = DICT_USERS[str(user)][1][question_id].chart
+        img_marked = DICT_USERS[str(user)][1][question_id].chart_marked
         DICT_USERS.close()
-        return render_template("task.html", img_name=img_name, question_id=question_id, user=user)
+        return render_template("task.html", img_name=img_name,img_marked=img_marked, question_id=question_id, user=user)
 
 
 @app.route('/validateTask/<int:question_id>', methods=['POST','GET'])
@@ -499,11 +502,13 @@ def saveAnswersTask(question_id):
     DICT_USERS = shelve.open('persistent_info_users')
     user = request.args.get('u', '')
 
-    if 'numberA' in request.form and len(request.form['numberA']) > 0 and 'numberB' in request.form and len(request.form['numberB']) > 0:
-        val_number_A = int(request.form['numberA'])
-        val_number_B = int(request.form['numberB'])
+    if 'taskA' in request.form and len(request.form['taskA']) > 0 and 'taskB' in request.form and len(request.form['taskB']) > 0 and 'taskB' in request.form and len(request.form['taskB']) > 0:
+        val_number_A = int(request.form['taskA'])
+        val_number_B = int(request.form['taskB'])
+        val_number_C = 5 #int(request.form['taskC'])
+        #FALTA
 
-        if val_number_A >=0 and val_number_A <= 100 and val_number_B >=0 and val_number_B <= 100:
+        if val_number_A >=0 and val_number_A <= 50 and val_number_B >=0 and val_number_B <= 50:
             # Compute elapsed time in seconds
             stop_time = dt.datetime.now()
             elapsed_time = stop_time - DICT_USERS[str(user)][2]
@@ -513,7 +518,7 @@ def saveAnswersTask(question_id):
             answersData.date = str(dt.datetime.now().date())
             answersData.time = str(dt.datetime.now().time())
             answersData.user = user
-            answersData.task = 'task 2'
+            answersData.task = 'task'
             answersData.age = -1
             answersData.gender = '-'
             answersData.education = '-'
@@ -524,18 +529,22 @@ def saveAnswersTask(question_id):
             answersData.satisfied = '-'
             answersData.comments = '-'
 
-            answersData.chart = DICT_USERS[str(user)][1][question_id].chart
-            answersData.A_num_clust = DICT_USERS[str(user)][1][question_id].val_A
+            answersData.chart = DICT_USERS[str(user)][0][question_id].chart
+            answersData.chart_marked = DICT_USERS[str(user)][0][question_id].chart_marked
+            answersData.A_num_clust = DICT_USERS[str(user)][0][question_id].A_numClus
             answersData.A_ANS_num_clus = val_number_A
-            answersData.B_value_marker = DICT_USERS[str(user)][1][question_id].val_B
+            answersData.B_value_marker = DICT_USERS[str(user)][0][question_id].B_valMark
             answersData.B_ANS_value_marker = val_number_B
-            answersData.error_A = val_number_A - DICT_USERS[str(user)][1][question_id].val_A
-            answersData.error_B = val_number_B - DICT_USERS[str(user)][1][question_id].val_B
-            answersData.abs_error_A = abs(val_number_A - DICT_USERS[str(user)][1][question_id].val_A)
-            answersData.abs_error_B = abs(val_number_B - DICT_USERS[str(user)][1][question_id].val_B)
+            answersData.C_value_to_click = DICT_USERS[str(user)][0][question_id].C_valClick
+            answersData.C_ANS_value_clicked = val_number_C
+            answersData.error_A = val_number_A - DICT_USERS[str(user)][0][question_id].A_numClus
+            answersData.error_B = val_number_B - DICT_USERS[str(user)][0][question_id].B_valMark
+            answersData.error_C = val_number_C - DICT_USERS[str(user)][0][question_id].C_valClick
+            ##FALTA VAL_RADIO_A
 
             answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
             answersData.prolific_code = '-'
+
             db.session.add(answersData)
             db.session.commit()
 
@@ -620,6 +629,7 @@ def validateEvalForm(aux):
         answersData.comments = comments
 
         answersData.chart = '-'
+        answersData.chart_marked = '-'
         answersData.A_num_clust = -1
         answersData.A_ANS_num_clus = -1
         answersData.B_value_marker = -1
@@ -629,9 +639,6 @@ def validateEvalForm(aux):
         answersData.error_A = -1
         answersData.error_B = -1
         answersData.error_C = -1
-        answersData.abs_error_A = -1
-        answersData.abs_error_B = -1
-        answersData.abs_error_C = -1
 
         answersData.time_spent = '-'
         answersData.prolific_code = '-'
@@ -666,6 +673,7 @@ def labelEndSuccess(aux):
     answersData.comments = '-'
 
     answersData.chart = '-'
+    answersData.chart_marked = '-'
     answersData.A_num_clust = -1
     answersData.A_ANS_num_clus = -1
     answersData.B_value_marker = -1
@@ -675,9 +683,6 @@ def labelEndSuccess(aux):
     answersData.error_A = -1
     answersData.error_B = -1
     answersData.error_C = -1
-    answersData.abs_error_A = -1
-    answersData.abs_error_B = -1
-    answersData.abs_error_C = -1
 
     answersData.time_spent = '-'
     answersData.prolific_code = str(prolific_code)

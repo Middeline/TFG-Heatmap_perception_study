@@ -24,7 +24,7 @@
 
         window.onunload = function () { null };
     </script>
-    
+
     <!-- Botones ocultar mostrar imagen -->
     <script>
        function mostrar(id)
@@ -68,8 +68,8 @@
         <tr>
           <form>
              <div class="images" align= "center">
-               <img src="/static/proves/2data0_points25-18.png" id="contenido1">
-               <img src="/static/proves/2data0.png" class="oculto" id="contenido2">
+               <img src="/static/task/{{ img_name }}.png" id="contenido1">
+               <img src="/static/task/{{ img_marked }}.png" class="oculto" id="contenido2">
              </div>
              <div class="buttons" align= "center">
                <input type="button" class="btn btn-secondary" onclick="mostrar('contenido1') & ocultar('contenido2')" value="Show cell marker">
@@ -84,7 +84,7 @@
             </br>
             <p align="center">Num of Clusters</p>
             <p align="center">
-              <input type="number" class="form-control" name="numberA" />
+              <input type="number" class="form-control" name="taskA" />
             </p>
             </br>
             </br>
@@ -94,13 +94,20 @@
             </br>
             <p align="center">Value</p>
             <p align="center">
-              <input type="number" class="form-control" name="numberB" />
+              <input type="number" class="form-control" name="taskB" />
             </p>
             </br>
             </br>
             </br>
           </td>
-          <td>&nbsp;</td>
+          <td>
+            <p align="center"> Click a cell with value {{ C_valClick }}: </p>
+            <p align="center">
+              <input type="text" class="form-control" name="taskC" id="regcoords"/>
+            </p>
+          </br>
+          </br>
+          </td>
         </tr>
         <tr>
           <td colspan="4">
