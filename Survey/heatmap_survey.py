@@ -452,9 +452,11 @@ def saveAnswersInstr(question_id):
         img_name = DICT_USERS[str(user)][0][question_id].chart
         options_A = DICT_USERS[str(user)][0][question_id].options_A
         options_B = DICT_USERS[str(user)][0][question_id].options_B
+        C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
+
         DICT_USERS.close()
         return render_template("instructions.html", img_name=img_name, question_id=question_id, user=user,
-                                options_A=options_A, options_B=options_B, error=ERROR_NO_OPTION)
+                                options_A=options_A, options_B=options_B, C_valClick=C_valClick, error=ERROR_NO_OPTION)
 
 #aux is a value that I won't use
 @app.route('/labelTask/<int:aux>')

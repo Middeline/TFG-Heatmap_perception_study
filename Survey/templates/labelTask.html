@@ -17,72 +17,61 @@
 
   </head>
 
-  <body>
-    <div align="center">
-      <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
-        <tr>
-          <td colspan="4">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            <p class="h3 text-center">
-              Task
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="4" height="480">
-            <p>&nbsp; </p>
-            <p class="h5 text-center">
-              </br>
-              In the next task, you will also have to determine the  </br>
-              number of clusters represented in the following Heatmap charts.
-              </br>
-              </br>
-              </br>
-              However, in this case, you will be asked to enter the values  </br>
-              for each chart in the boxes that will be shown        </br>
-              under the chart.
-              </br>
-              </br>
-              </br>
-              Previous studies determine that the average time to answer    </br>
-              each single value is about 5-7 seconds. However, take as much </br>
-              time as necessary to complete each assignment,                </br>
-              aiming at correctness, instead of speed.
-              </br>
-              </br>
-              </br>
-              Press the "Start" button when you are ready                   </br>
-              to begin the task.
-              </br>
-              </br>
-              </br>
-              </br>
-              </br>
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="4">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            <table width="640" border="0" align="center" cellpadding="11" cellspacing="10">
-              <tr>
-                <td>
-                  <div align="center">
-                    <form method="POST" action="/startTask/0?u={{ user }}">
-                      <button type="submit" name="Start-button" class="btn btn-primary">Start</button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </body>
 
+    <body>
+      <div align="center">
+        <table width="640" border="0" align="center" cellpadding="10" cellspacing="10">
+          <tr>
+            <td colspan="4">&nbsp;</td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <p class="h4 text-center">
+                Final Survey
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" height="280">
+              <p class="h6 text-center">
+                </br>
+                You will now start with the actual Survey. This time you will <br>
+                have to answer with open values and not options.
+                <br>
+                <br>
+                </p>
+
+                <p class="h6 text-center">
+                </br>
+                </br>
+                Please answer consciously as your answers will be evaluated <br>
+                to see if you can access the survey.
+                </br>
+                </br>
+                <br>
+                To begin the task, press the "Start" button below.
+                </br>
+              </p>
+            </td>
+          </tr>
+          <tr>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <table width="640" border="0" align="center" cellpadding="15" cellspacing="10">
+                <tr>
+                  <td>
+                    <div align="center">
+                      <form method="POST" action="/startTask/0?u={{ user }}">
+                        <button type="submit" name="Start-button" class="btn btn-primary">Start</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </body>
 </html>
