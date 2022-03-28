@@ -779,5 +779,5 @@ def labelEndFailure(aux):
 
 if __name__ == "__main__":
     #random.seed(time.time())
-    app.run(debug=True)
-    app.run()
+    #app.run(debug=True)
+    #app.run()
