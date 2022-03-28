@@ -466,7 +466,7 @@ def saveAnswersInstr(question_id):
             answersData.C_value_to_click = DICT_USERS[str(user)][0][question_id].C_valClick
             answersData.C_ANS_value_clicked = val_number_C
             answersData.error_A = NumClusters - DICT_USERS[str(user)][0][question_id].A_numClus
-            answersData.error_B = CellValue - DICT_USERS[str(user)][0][question_id].B_valMark
+            answersData.error_B = val_number_C - DICT_USERS[str(user)][0][question_id].B_valMark
             answersData.error_C = 4 - DICT_USERS[str(user)][0][question_id].C_valClick
             ##FALTA VAL_RADIO_A
 
