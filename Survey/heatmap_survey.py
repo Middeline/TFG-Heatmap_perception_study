@@ -576,7 +576,6 @@ def saveAnswersTask(question_id):
                 data = DICT_USERS[str(user)][0][question_id].data
                 #value
                 val_number_C = read_coords_value(xx, yy, data)
-                #print("VALUE", val_number_C)
 
                 stop_time = dt.datetime.now()
                 elapsed_time = stop_time - DICT_USERS[str(user)][2]
