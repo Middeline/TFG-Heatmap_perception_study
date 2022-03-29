@@ -90,7 +90,7 @@ class taskChart: #Charts used in tasks
 
 
 #Input instructions
-charts_instr = [intrChart('0heatmap7_Blues_marker_35_0','0heatmap7_Blues_marker_35_0', '0data7', 0, 35, 14,['1', '4', '0', '3'], ['22', '28', '35', '40']),
+charts_instr = [intrChart('0heatmap7_Blues_','0heatmap7_Blues_marker_35_0', '0data7', 0, 35, 14,['1', '4', '0', '3'], ['22', '28', '35', '40']),
                 intrChart('1heatmap5_Blues_marker_31_0','1heatmap5_Blues_marker_31_0','1data5', 1, 31, 5, ['0', '2', '3', '1'], ['23', '30', '31', '42']),
                 intrChart('1heatmap5_Blues_marker_31_transposed_0','1heatmap5_Blues_marker_31_transposed_0', '1data5', 1, 31, 42,['1', '4', '3', '2'], ['31', '27', '23', '38']),
                 intrChart('2heatmap6_Viridis_marker_23_0','2heatmap6_Viridis_marker_23_0', '2data6', 2, 23, 2, ['0', '2', '3', '1'], ['12', '17', '25', '23']),
@@ -466,8 +466,8 @@ def saveAnswersInstr(question_id):
             answersData.C_value_to_click = DICT_USERS[str(user)][0][question_id].C_valClick
             answersData.C_ANS_value_clicked = val_number_C
             answersData.error_A = NumClusters - DICT_USERS[str(user)][0][question_id].A_numClus
-            answersData.error_B = val_number_C - DICT_USERS[str(user)][0][question_id].B_valMark
-            answersData.error_C = 4 - DICT_USERS[str(user)][0][question_id].C_valClick
+            answersData.error_B = CellValue - DICT_USERS[str(user)][0][question_id].B_valMark
+            answersData.error_C = val_number_C - DICT_USERS[str(user)][0][question_id].C_valClick
             ##FALTA VAL_RADIO_A
 
             answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
