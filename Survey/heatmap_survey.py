@@ -8,6 +8,7 @@ import datetime as dt
 
 #coord imports
 import numpy as np
+import pandas as pd
 
 from flask import Flask, render_template, url_for, redirect, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -16,11 +17,10 @@ from wtforms.fields import StringField, SubmitField, RadioField
 from wtforms import validators
 
 
-
-NUM_CHARTS_INSTR = 2
-NUM_CHARTS_TASK = 1
-NUM_CHARTS_BETWEEN_BREAKS = 0
-ERRORS_ALLOWED_INSTR = 4
+NUM_CHARTS_INSTR = 5
+NUM_CHARTS_TASK = 35
+NUM_CHARTS_BETWEEN_BREAKS = 10000
+ERRORS_ALLOWED_INSTR = 100
 ERROR_NO_TERMS_ACCEPTED = "You must accept the terms of the study to continue"
 ERROR_DEMO_SURVEY = "Please, fill in the survey again answering all the questions. Make sure that you introduce a valid age and a valid display size (if you know it)"
 ERROR_NO_OPTION = "Please, select a value for both Num of Clusters and Value"
@@ -61,16 +61,15 @@ class AnswersData(db.Model):
     error_B             = db.Column(db.Integer)         # Error B (Real Cell Value - Value answered)
     error_C             = db.Column(db.Integer)         # Error C (Real Value asked - Cell's Value clicked)
     time_spent          = db.Column(db.String(32))      # Time spent to answer
-    prolific_code       = db.Column(db.String(32))      # Prolific's  code FALTA --> I THINK I MAY NOT NEED THIS
 
     # FALTA rgb color???
     # NO al final he decidit estudiar el millor i pitjor cas i mirar els veins
 
 
 class intrChart: #Charts used in the introduction
-    def __init__(self, chart, chart_marked, data, A_numClus, B_valMark, C_valClick, options_A, options_B):
-        self.chart = chart
+    def __init__(self, chart_marked, chart, data, A_numClus, B_valMark, C_valClick, options_A, options_B):
         self.chart_marked = chart_marked
+        self.chart = chart
         self.data = data
         self.A_numClus = A_numClus
         self.B_valMark = B_valMark
@@ -80,9 +79,9 @@ class intrChart: #Charts used in the introduction
 
 
 class taskChart: #Charts used in tasks
-    def __init__(self, chart, chart_marked, data, A_numClus, B_valMark, C_valClick):
-        self.chart = chart
+    def __init__(self, chart_marked, chart, data, A_numClus, B_valMark, C_valClick):
         self.chart_marked = chart_marked
+        self.chart = chart
         self.data = data
         self.A_numClus = A_numClus
         self.B_valMark = B_valMark
@@ -90,24 +89,84 @@ class taskChart: #Charts used in tasks
 
 
 #Input instructions
-charts_instr = [intrChart('0heatmap7_Blues_','0heatmap7_Blues_marker_35_0', '0data7', 0, 35, 14,['1', '4', '0', '3'], ['22', '28', '35', '40']),
-                intrChart('1heatmap5_Blues_marker_31_0','1heatmap5_Blues_marker_31_0','1data5', 1, 31, 5, ['0', '2', '3', '1'], ['23', '30', '31', '42']),
-                intrChart('1heatmap5_Blues_marker_31_transposed_0','1heatmap5_Blues_marker_31_transposed_0', '1data5', 1, 31, 42,['1', '4', '3', '2'], ['31', '27', '23', '38']),
-                intrChart('2heatmap6_Viridis_marker_23_0','2heatmap6_Viridis_marker_23_0', '2data6', 2, 23, 2, ['0', '2', '3', '1'], ['12', '17', '25', '23']),
-                intrChart('2heatmap8_Blues_marker_27_0','2heatmap8_Blues_marker_27_0', '2data8', 2, 27, 23,['4', '1', '3', '2'], ['31', '21', '19', '27'])]
+charts_instr = [intrChart('3heatmap3_Viridis_cont_marker_0','3heatmap3_Viridis_cont', '3data3', 3, 0, random.randint(0, 50),['1', '4', '0', '3'], ['0', '2', '10', '4']),
+                intrChart('1heatmap1_Blues_cont_marker_7','1heatmap1_Blues_cont','1data1', 1, 7, random.randint(0, 50), ['0', '2', '3', '1'], ['5', '3', '7', '9']),
+                intrChart('1heatmap7_Blues_disc_marker_22','1heatmap7_Blues_disc', '1data7', 1, 22, random.randint(0, 50),['1', '4', '3', '2'], ['22', '27', '23', '26']),
+                intrChart('2heatmap0_Blues_disc_marker_17','2heatmap0_Blues_disc', '2data0', 2, 17, random.randint(0, 50), ['0', '2', '3', '1'], ['15', '17', '20', '23']),
+                intrChart('2heatmap3_Viridis_cont_marker_12','2heatmap3_Viridis_cont', '2data3', 2, 12, random.randint(0, 50),['4', '1', '3', '2'], ['12', '15', '10', '9'])]
 
 #Input task
-charts_task = [taskChart('0heatmap7_Blues_marker_35_0','0heatmap7_Blues_marker_35_0', '0data7', 0, 35, 14),
-                taskChart('1heatmap5_Blues_marker_31_0', '1heatmap5_Blues_marker_31_0', '1data5',  1, 31, 5),
-                taskChart('1heatmap5_Blues_marker_31_transposed_0', '1heatmap5_Blues_marker_31_transposed_0', '1data5', 1, 31, 42),
-                taskChart('2heatmap6_Viridis_marker_23_0', '2heatmap6_Viridis_marker_23_0','2data6',  2, 23, 2),
-                taskChart('2heatmap8_Blues_marker_27_0', '2heatmap8_Blues_marker_27_0','2data8', 2, 27, 23)]
+charts_task = [  #0 CLUSTERS BLUES
+                taskChart('0heatmap1_Blues_cont_marker_20', '0heatmap1_Blues_cont', '0data1', 0, 20, random.randint(0, 50)),
+                taskChart('0heatmap9_Blues_disc_marker_0', '0heatmap9_Blues_disc', '0data9', 0, 0, random.randint(0, 50)),
+                # 0 CLUSTERS VIRIDIS
+                taskChart('0heatmap5_Viridis_cont_marker_22', '0heatmap5_Viridis_cont', '0data5', 0, 22, random.randint(0, 50)),
+                taskChart('0heatmap7_Viridis_disc_marker_10', '0heatmap7_Viridis_disc', '0data7', 0, 10, random.randint(0, 50)),
+                taskChart('0heatmap7_Viridis_disc_marker_10', '0heatmap7_Viridis_disc', '0data7', 0, 10, random.randint(0, 50)),
+
+
+                # 1 CLUSTER BLUE CONT
+                taskChart('1heatmap0_Blues_cont_marker_26', '1heatmap0_Blues_cont', '0data0', 0, 26, random.randint(0, 50)),
+                taskChart('1heatmap6_Blues_cont_marker_17_transposed', '1heatmap6_Blues_transposed_cont', '0data6', 0, 17, random.randint(0, 50)),
+                taskChart('1heatmap6_Blues_cont_marker_17', '1heatmap6_Blues_cont', '0data6', 0, 17, random.randint(0, 50)),
+
+                # 1 cluster blues disc
+                taskChart('1heatmap2_Blues_disc_marker_24', '1heatmap2_Blues_disc', '0data2', 0, 24, random.randint(0, 50)),
+                taskChart('1heatmap5_Blues_disc_marker_0', '1heatmap5_Blues_disc', '0data5', 0, 0, random.randint(0, 50)),
+                taskChart('1heatmap5_Blues_disc_marker_0_transposed', '1heatmap5_Blues_transposed_disc', '0data5', 0, 0, random.randint(0, 50)),
+
+                # 1 CLUSTER VIRIDIS CONT
+                taskChart('1heatmap0_Viridis_cont_marker_26_transposed', '1heatmap0_Viridis_transposed_cont', '1data0', 0, 26, random.randint(0, 50)),
+                taskChart('1heatmap0_Viridis_cont_marker_26', '1heatmap0_Viridis_cont', '1data0', 0, 26, random.randint(0, 50)),
+                taskChart('1heatmap4_Viridis_cont_marker_15', '1heatmap4_Viridis_cont', '1data4', 0, 15, random.randint(0, 50)),
+
+                # 1 CLUSTER VIRIDIS DISC
+                taskChart('1heatmap3_Vi ridis_disc_marker_14', '1heatmap3_Viridis_disc', '1data3', 0, 14, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_14', '1heatmap8_Viridis_disc', '1data8', 0, 14, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_14', '1heatmap8_Viridis_disc', '1data8', 0, 14, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_14_transposed', '1heatmap8_Viridis_transposed_disc', '1data8', 0, 14, random.randint(0, 50)),
+
+                #-----------------------------------------------------
+
+                # 2 CLUSTER BLUE CONT
+                taskChart('2heatmap4_Blues_cont_marker_26', '2heatmap4_Blues_cont', '0data0', 0, 26, random.randint(0, 50)),
+                taskChart('2heatmap8_Blues_cont_marker_7_transposed', '2heatmap8_Blues_transposed_cont', '0data6', 0, 7, random.randint(0, 50)),
+                taskChart('2heatmap8_Blues_cont_marker_7', '2heatmap8_Blues_cont', '0data6', 0, 7, random.randint(0, 50)),
+
+                # 2 cluster blues disc
+                taskChart('2heatmap1_Blues_disc_marker_34', '2heatmap1_Blues_disc', '2data1', 0, 34, random.randint(0, 50)),
+                taskChart('2heatmap1_Blues_disc_marker_34_transposed', '2heatmap1_Blues_transposed_disc', '2data1', 0, 34, random.randint(0, 50)),
+                taskChart('2heatmap6_Blues_disc_marker_3', '2heatmap6_Blues_disc', '2data6', 0, 3, random.randint(0, 50)),
+
+                # 2 CLUSTER VIRIDIS CONT
+                taskChart('2heatmap7_Viridis_cont_marker_41_transposed', '2heatmap7_Viridis_transposed_cont', '2data7', 0, 41, random.randint(0, 50)),
+                taskChart('2heatmap7_Viridis_cont_marker_41', '2heatmap7_Viridis_cont', '2data7', 0, 41, random.randint(0, 50)),
+                taskChart('2heatmap7_Viridis_cont_marker_41', '2heatmap7_Viridis_cont', '2data7', 0, 41, random.randint(0, 50)),
+                taskChart('2heatmap2_Viridis_cont_marker_12', '2heatmap2_Viridis_cont', '2data2', 0, 12, random.randint(0, 50)),
+
+                # 2 CLUSTER VIRIDIS DISC
+                taskChart('2heatmap5_Viridis_disc_marker_20', '2heatmap5_Viridis_disc', '2data5', 0, 20, random.randint(0, 50)),
+                taskChart('2heatmap9_Viridis_disc_marker_28', '2heatmap9_Viridis_disc', '2data9', 0, 28, random.randint(0, 50)),
+                taskChart('2heatmap9_Viridis_disc_marker_28_transposed', '2heatmap9_Viridis_transposed_disc', '2data9', 0, 28, random.randint(0, 50)),
+
+                #-----------------------------------------------------
+
+                # 3 CLUSTER BLUE CONT
+                taskChart('3heatmap5_Blues_cont_marker_34', '3heatmap5_Blues_cont', '3data5', 0, 34, random.randint(0, 50)),
+                taskChart('3heatmap6_Blues_disc_marker_27', '3heatmap6_Blues_disc', '3data6', 0, 27, random.randint(0, 50)),
+
+                # 3 CLUSTER VIRIDIS CONT
+                taskChart('3heatmap1_Viridis_cont_marker_6', '3heatmap1_Viridis_cont', '3data1', 0, 6, random.randint(0, 50)),
+                taskChart('3heatmap4_Viridis_disc_marker_40', '3heatmap4_Viridis_disc', '3data4', 0, 40, random.randint(0, 50))]
+
+
 
 
 #function to read the value from the click coords
 def read_coords_value(CoordX, CoordY, data):
     #read data from file
-    heatmap = np.genfromtxt('static/data/'+data+'.csv', delimiter=',')
+    dades = pd.read_csv('static/data/'+data+'.csv', delimiter=',')
+    heatmap = np.asarray(dades)
     #57 * 32 offset start
     #445 x 417 offset end
     x0 = 57 #offset
@@ -159,7 +218,7 @@ def modifyDictUsers(dictio, key_dict, elem, new_value_elem):
 def random_order_valid(random_charts_task):
     order_ok = True
     for i in range(0, NUM_CHARTS_TASK-1):
-        if random_charts_task[i].chart == random_charts_task[i+1].chart:
+        if random_charts_task[i].chart_marked == random_charts_task[i+1].chart_marked:
             order_ok = False
     return order_ok
 
@@ -253,7 +312,6 @@ def validateIndex(aux):
         answersData.error_C = -1
 
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
 
         db.session.add(answersData)
         db.session.commit()
@@ -357,7 +415,6 @@ def validateDemoForm(aux):
         answersData.error_C = -1
 
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
 
         db.session.add(answersData)
         db.session.commit()
@@ -471,7 +528,6 @@ def saveAnswersInstr(question_id):
             ##FALTA VAL_RADIO_A
 
             answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
-            answersData.prolific_code = '-'
 
             db.session.add(answersData)
             db.session.commit()
@@ -505,7 +561,7 @@ def saveAnswersInstr(question_id):
         C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
 
         DICT_USERS.close()
-        return render_template("instructions.html", img_name=img_name, question_id=question_id, user=user,
+        return render_template("instructions.html", img_name=img_name,img_marked=img_marked, question_id=question_id, user=user,
                                 options_A=options_A, options_B=options_B, C_valClick=C_valClick, error=ERROR_NO_OPTION)
 
 #aux is a value that I won't use
@@ -533,11 +589,11 @@ def task(question_id):
     if question_id == NUM_CHARTS_TASK:
         DICT_USERS.close()
         return redirect('/evalForm/0?u='+str(user))
-    elif not DICT_USERS[str(user)][4] and question_id != 0 and question_id % NUM_CHARTS_BETWEEN_BREAKS == 0:
-        DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 4, True)
+    #elif not DICT_USERS[str(user)][4] and question_id != 0 and question_id % NUM_CHARTS_BETWEEN_BREAKS == 0:
+    #    DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 4, True)
         #DICT_USERS[str(user)][4] = True;
-        DICT_USERS.close()
-        return redirect('/breakTime/'+str(question_id)+'?u='+str(user))
+    #    DICT_USERS.close()
+    #    return redirect('/breakTime/'+str(question_id)+'?u='+str(user))
     else:
         if DICT_USERS[str(user)][4]:
             DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 4, False)
@@ -545,7 +601,7 @@ def task(question_id):
 
         img_name = DICT_USERS[str(user)][1][question_id].chart
         img_marked = DICT_USERS[str(user)][1][question_id].chart_marked
-        C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
+        C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
         DICT_USERS.close()
         return render_template("task.html", img_name=img_name,img_marked=img_marked, question_id=question_id, C_valClick=C_valClick, user=user)
@@ -573,7 +629,7 @@ def saveAnswersTask(question_id):
             if (xx >= 57 and xx <= 445 and yy >= 32 and yy <= 417):
 
                 #check if the click is over the heatmap
-                data = DICT_USERS[str(user)][0][question_id].data
+                data = DICT_USERS[str(user)][1][question_id].data
                 #value
                 val_number_C = read_coords_value(xx, yy, data)
 
@@ -596,21 +652,20 @@ def saveAnswersTask(question_id):
                 answersData.satisfied = '-'
                 answersData.comments = '-'
 
-                answersData.chart = DICT_USERS[str(user)][0][question_id].chart
-                answersData.chart_marked = DICT_USERS[str(user)][0][question_id].chart_marked
-                answersData.A_num_clust = DICT_USERS[str(user)][0][question_id].A_numClus
+                answersData.chart = DICT_USERS[str(user)][1][question_id].chart
+                answersData.chart_marked = DICT_USERS[str(user)][1][question_id].chart_marked
+                answersData.A_num_clust = DICT_USERS[str(user)][1][question_id].A_numClus
                 answersData.A_ANS_num_clus = val_number_A
-                answersData.B_value_marker = DICT_USERS[str(user)][0][question_id].B_valMark
+                answersData.B_value_marker = DICT_USERS[str(user)][1][question_id].B_valMark
                 answersData.B_ANS_value_marker = val_number_B
-                answersData.C_value_to_click = DICT_USERS[str(user)][0][question_id].C_valClick
+                answersData.C_value_to_click = DICT_USERS[str(user)][1][question_id].C_valClick
                 answersData.C_ANS_value_clicked = val_number_C
-                answersData.error_A = val_number_A - DICT_USERS[str(user)][0][question_id].A_numClus
-                answersData.error_B = val_number_B - DICT_USERS[str(user)][0][question_id].B_valMark
-                answersData.error_C = val_number_C - DICT_USERS[str(user)][0][question_id].C_valClick
+                answersData.error_A = val_number_A - DICT_USERS[str(user)][1][question_id].A_numClus
+                answersData.error_B = val_number_B - DICT_USERS[str(user)][1][question_id].B_valMark
+                answersData.error_C = val_number_C - DICT_USERS[str(user)][1][question_id].C_valClick
                 ##FALTA VAL_RADIO_A
 
                 answersData.time_spent = str(elapsed_time.total_seconds())+' sec'
-                answersData.prolific_code = '-'
 
                 db.session.add(answersData)
                 db.session.commit()
@@ -624,7 +679,7 @@ def saveAnswersTask(question_id):
             else:
                 img_name = DICT_USERS[str(user)][1][question_id].chart
                 img_marked = DICT_USERS[str(user)][1][question_id].chart_marked
-                C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
+                C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
                 DICT_USERS.close()
                 return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, user=user,
@@ -632,7 +687,7 @@ def saveAnswersTask(question_id):
 
     img_name = DICT_USERS[str(user)][1][question_id].chart
     img_marked = DICT_USERS[str(user)][1][question_id].chart_marked
-    C_valClick = DICT_USERS[str(user)][0][question_id].C_valClick
+    C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
     DICT_USERS.close()
     return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, user=user,
@@ -720,7 +775,6 @@ def validateEvalForm(aux):
         answersData.error_C = -1
 
         answersData.time_spent = '-'
-        answersData.prolific_code = '-'
         db.session.add(answersData)
         db.session.commit()
 
@@ -733,14 +787,12 @@ def validateEvalForm(aux):
 @app.route('/labelEndSuccess/<int:aux>')
 def labelEndSuccess(aux):
     user = request.args.get('u', '')
-    prolific_code = random.randint(0,100000000)
-
     # Write the code in the DB
     answersData = AnswersData()
     answersData.date = str(dt.datetime.now().date())
     answersData.time = str(dt.datetime.now().time())
     answersData.user = user
-    answersData.task = 'prolific_code'
+    answersData.task = 'END'
     answersData.age = -1
     answersData.gender = '-'
     answersData.education = '-'
@@ -764,11 +816,10 @@ def labelEndSuccess(aux):
     answersData.error_C = -1
 
     answersData.time_spent = '-'
-    answersData.prolific_code = str(prolific_code)
     db.session.add(answersData)
     db.session.commit()
 
-    return render_template("labelEndSuccess.html", user=user, prolific_code=prolific_code)
+    return render_template("labelEndSuccess.html", user=user)
 
 #aux is a value that I won't use
 @app.route('/labelEndFailure/<int:aux>')
