@@ -17,7 +17,7 @@ from wtforms.fields import StringField, SubmitField, RadioField
 from wtforms import validators
 
 
-NUM_CHARTS_INSTR = 5
+NUM_CHARTS_INSTR = 3
 NUM_CHARTS_TASK = 35
 NUM_CHARTS_BETWEEN_BREAKS = 10000
 ERRORS_ALLOWED_INSTR = 100
@@ -92,7 +92,7 @@ class taskChart: #Charts used in tasks
 #Input instructions
 charts_instr = [intrChart('3heatmap3_Viridis_cont_marker_0','3heatmap3_Viridis_cont', '3data3', 3, 0, random.randint(0, 50),['1', '4', '0', '3'], ['0', '2', '10', '4']),
                 intrChart('1heatmap1_Blues_cont_marker_7','1heatmap1_Blues_cont','1data1', 1, 7, random.randint(0, 50), ['0', '2', '3', '1'], ['5', '3', '7', '9']),
-                intrChart('1heatmap6_Blues_cont_marker_17_transposed', '1heatmap6_Blues_transposed_cont', '1data6_transposed', 1, 17, random.randint(0, 50), ['0', '2', '3', '1'], ['15', '17', '20', '23']),
+                intrChart('1heatmap7_Blues_disc_marker_22', '1heatmap7_Blues_disc', '1data7', 1, 22, random.randint(0, 50), ['0', '2', '3', '1'], ['15', '30', '20', '22']),
                 intrChart('2heatmap0_Blues_disc_marker_17','2heatmap0_Blues_disc', '2data0', 2, 17, random.randint(0, 50), ['0', '2', '3', '1'], ['15', '17', '20', '23']),
                 intrChart('2heatmap3_Viridis_cont_marker_12','2heatmap3_Viridis_cont', '2data3', 2, 12, random.randint(0, 50),['4', '1', '3', '2'], ['12', '15', '10', '9'])]
 
@@ -122,9 +122,9 @@ charts_task = [  #0 CLUSTERS BLUES
 
                 # 1 CLUSTER VIRIDIS DISC
                 taskChart('1heatmap3_Viridis_disc_marker_14', '1heatmap3_Viridis_disc', '1data3', 1, 14, random.randint(0, 50)),
-                taskChart('1heatmap8_Viridis_disc_marker_14', '1heatmap8_Viridis_disc', '1data8', 1, 14, random.randint(0, 50)),
-                taskChart('1heatmap8_Viridis_disc_marker_14', '1heatmap8_Viridis_disc', '1data8', 1, 14, random.randint(0, 50)),
-                taskChart('1heatmap8_Viridis_disc_marker_14_transposed', '1heatmap8_Viridis_transposed_disc', '1data8_transposed', 1, 14, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_38', '1heatmap38_Viridis_disc', '1data8', 1, 38, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_38', '1heatmap38_Viridis_disc', '1data8', 1, 38, random.randint(0, 50)),
+                taskChart('1heatmap8_Viridis_disc_marker_38_transposed', '1heatmap8_Viridis_transposed_disc', '1data8_transposed', 1, 38, random.randint(0, 50)),
 
                 #-----------------------------------------------------
 
@@ -158,7 +158,6 @@ charts_task = [  #0 CLUSTERS BLUES
                 # 3 CLUSTER VIRIDIS CONT
                 taskChart('3heatmap1_Viridis_cont_marker_6', '3heatmap1_Viridis_cont', '3data1', 3, 6, random.randint(0, 50)),
                 taskChart('3heatmap4_Viridis_disc_marker_40', '3heatmap4_Viridis_disc', '3data4', 3, 40, random.randint(0, 50))]
-
 
 
 

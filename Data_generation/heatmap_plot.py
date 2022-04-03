@@ -67,53 +67,7 @@ def point_marker(carpeta, name):
         plot_heatmap(heatmap, folder + "cont/" + name + "_Viridis_cont_marker_" + str(int(value))  , 1, points, 1)
         plot_heatmap(heatmap, folder + "disc/" + name + "_Viridis_disc_marker_" + str(int(value)) , 1, points, 0)
 
-    '''
-    value = 999
-    for i in range(5):
-        #----------------------------
-        # 0-13
-        if (i == 0):
-            while (value > 13):
-                x = random.randint(5, estacions-5)
-                y = random.randint(5, estacions-5)
-                points = [x+0.5, y+0.5]
-            if transpose:
-                value = heatmap[x][y]
-                plot_heatmap(heatmap, folder + name + "_marker_" + str(value) + "_transposed", 1, points)
-            else:
-                value = heatmap[y][x]
-                plot_heatmap(heatmap, folder + name + "_marker_" + str(value), 1, points)
 
-        #----------------------------
-        # 14-25
-        elif (i == 1):
-            while (value < 14 or value > 25):
-                x = random.randint(5, estacions-5)
-                y = random.randint(5, estacions-5)
-                points = [x+0.5, y+0.5]
-                value = heatmap[y][x]
-            plot_heatmap(heatmap, folder + name + "_marker_" + str(value), 1, points)
-
-        #----------------------------
-        # 26-38
-        elif (i == 2): # 26-38
-            while (value < 26 or value > 38):
-                x = random.randint(5, estacions-5)
-                y = random.randint(5, estacions-5)
-                points = [x+0.5, y+0.5]
-                value = heatmap[y][x]
-            plot_heatmap(heatmap, folder + name + "_marker_" + str(value), 1, points)
-
-        #----------------------------
-        # 38-50
-        else: # 38-50
-            while (value < 39):
-                x = random.randint(5, estacions-5)
-                y = random.randint(5, estacions-5)
-                points = [x+0.5, y+0.5]
-                value = heatmap[y][x]
-            plot_heatmap(heatmap, folder + name + "_marker_" + str(value), 1, points)
-    '''
 #–----------------------------------------------------------------------------
 
 def transpose_heatmap(carpeta, plot_name):
@@ -127,14 +81,14 @@ def transpose_heatmap(carpeta, plot_name):
 
 #–----------------------------------------------------------------------------
 
-for a in range(0, 4):
-    for b in range(10):
+for a in range(1, 2):
+    for b in ([3, 8]):
         blues = False
         init(a, b)
         carpeta = "data/" + str(a) + "/plots/viridis/"
         plot_name = str(a) + "heatmap" + str(b)
-        plot_heatmap(heatmap, carpeta + plot_name + "_cont", 0, [], 1)
-        plot_heatmap(heatmap, carpeta + plot_name + "_disc", 0, [], 0)
+        plot_heatmap(heatmap, carpeta + plot_name + "Viridis_cont", 0, [], 1)
+        plot_heatmap(heatmap, carpeta + plot_name + "Viridis_disc", 0, [], 0)
         transpose_heatmap(carpeta, plot_name)
         blues = True
         carpeta = "data/" + str(a) + "/plots/blues/"
