@@ -20,7 +20,7 @@ from wtforms import validators
 NUM_CHARTS_INSTR = 3
 NUM_CHARTS_TASK = 35
 NUM_CHARTS_BETWEEN_BREAKS = 10000
-ERRORS_ALLOWED_INSTR = 100
+ERRORS_ALLOWED_INSTR = 1
 
 ERROR_NO_TERMS_ACCEPTED = "You must accept the terms of the study to continue"
 ERROR_DEMO_SURVEY = "Please, fill in the survey again answering all the questions. Make sure that you introduce a valid age and a valid display size (if you know it)"
@@ -164,9 +164,9 @@ charts_task = [  #0 CLUSTERS BLUES
 def read_coords_value(CoordX, CoordY, data):
     #read data from file
     #WEB
-    dades = pd.read_csv('/home/middeline/mysite/static/data/'+data+'.csv', delimiter=',',  header=None)
+    #dades = pd.read_csv('/home/carolinamiddel/mysite/static/data/'+data+'.csv', delimiter=',',  header=None)
     #EN LOCAL
-    #dades = pd.read_csv('static/data/'+data+'.csv', delimiter=',',  header=None)
+    dades = pd.read_csv('static/data/'+data+'.csv', delimiter=',',  header=None)
     heatmap = np.asarray(dades)
 
     #57 * 32 offset start
@@ -228,6 +228,7 @@ def random_order_valid(random_charts_task):
     return order_ok
 
 
+
 @app.route('/')
 def homepage():
     #global charts_instr, charts_task, DICT_USERS
@@ -244,12 +245,12 @@ def homepage():
 
     # We create the user id and randomize the images for both tasks
     random.seed(time.time())
-    user = random.randint(0,100000000)
+    user = request.args.get('PROLIFIC_PID')
 
     # Check that the user does not exist
     #BORRAR
-    while DICT_USERS.__contains__(str(user)):
-        user = random.randint(0,100000000)
+    if DICT_USERS.__contains__(str(user)):
+        return render_template("labelEndFailure.html", user=user)
 
     random.seed(int(user))
     charts_instr_user = charts_instr
@@ -273,7 +274,6 @@ def homepage():
 
     return redirect('/index/0?u='+str(user));
 
-#####------------------------------------------------------------CAL REPASSAR--------------------------------------------------------
 
 
 #aux is a value that I won't use
@@ -538,7 +538,7 @@ def saveAnswersInstr(question_id):
                 db.session.add(answersData)
                 db.session.commit()
 
-                if abs(answersData.error_A) > 10 or abs(answersData.error_B) > 10:
+                if abs(answersData.error_A) > 1 or abs(answersData.error_B) > 5:
                     errors_instr = DICT_USERS[str(user)][3] + 1
                     DICT_USERS = modifyDictUsers(DICT_USERS, str(user), 3, errors_instr)
                     #DICT_USERS[str(user)][3] = DICT_USERS[str(user)][3] + 1

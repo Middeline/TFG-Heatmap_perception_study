@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Heatmaps User Study</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <div align="center">
+      <tr>
+        <td colspan="4">
+        </br>
+          {% if error %}
+          <table width="840" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error!</strong> {{ error }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </table>
+          {% endif %}
+        </td>
+      </tr>
+      <table width="840" border="0" align="center" cellpadding="10" cellspacing="10">
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <p class="h3 text-center">
+              Heatmaps Perception User Study
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <div class= "p-3 mb-2 bg-light text-dark">
+              <p class="h5 text-justify">
+                Welcome!
+              </p class="text-justify">
+              <p>
+                You are going to participate in a User Study designed to find out how humans perceive data represented through Heatmap Charts. <br>
+                A Heatmap is a two-dimensional visual representation of data, where values are encoded in colors. Essentially, this chart type is a data table with rows and columns denoting different sets of values or categories.
+              <br> <p class="h6 text-justify"> About the study </p>
+                To evaluate the effectiveness and characteristics of these visualizations,
+                we will present to you a series of Heatmap charts. They will represent the average
+                number of bicycles in a station (Y axis) for a day number (X axis) from a bike sharing system.
+                As you can see in the next photo.
+
+
+                <br><br>
+                  <p class = "text-center">
+                   <img src="/static/example.png" height = 300  alt="Example"> <br> <br>
+                    * Note the color palettes can differ from this one.
+                 </p>
+
+                 <br>
+                <p class="h6 text-justify">The tasks</p>
+                You will conduct 3 different tasks for each one. <br> <br>
+                1. Count the number of clusters represented.
+                <br>
+                2. Guess the value of the cell marked in red.
+                <br>
+                3. Click over a cell that you think contains a value we indicate.
+                <br> <br>
+                Referring to cluster as a group or region of the heatmap where several neighboring cells have similar occupancy (not necessarily the same). <br>
+                For instance, in the Heatmap shown before, you can see two of these groups, now marked in the next Figure. <br> <br>
+
+                <p class = "text-center">
+                 <img src="/static/example_cluster.png" height = 300  alt="Example">
+               </p>
+
+                <p class="h6 text-justify"> This study is structured as follows</p>
+
+                <b>1. Demographic Survey.</b> First, you will be asked to provide some personal information (age, gender, quality of eyesight, etc.). We do not ask for your identity, so you will remain anonymous.
+                <br>
+                <b>2. Introductory Survey.</b> This first introductory survey is a short example to get familiar with the tasks and evaluate your suitability to proceed with the test.
+                <br>
+                <b>3. Survey.</b> Having passed the introductory task, you will begin the main survey, where you will have to answer the same tasks as the introductory survey but now with open values for the answers.
+                <br>
+                <b>4. Personal Evaluation Survey.</b> Finally, a personal evaluation survey, to gather additional comments and opinions about the study, if any.
+                <br> <br>
+                <p class="h6 text-justify"> Further considerations</p>
+                - As a perceptual study, you should not use rulers or any other external tool to measure length.
+                <br>
+                - The average time to complete the study is about 20 minutes (40 - 45 seconds for each chart). However, you can spend as much time as you need to complete it.
+                <br>
+                - The data collected will only be used for academic purposes.
+                <br>
+                - You will be paid if you meet these conditions: If you complete the whole study, demographic and evaluation forms, introductory survey, and the main survey. But also your test results have to be strong, meaning, they must pass the random or nonsense detection test.
+                <br>
+                - Due to the nature of the study, it does not result in risks to human health.
+
+              </p>
+            </div>
+          </td>
+        </tr>
+        <form name="formIndex" method="POST" action="/validateIndex/0?u={{ user }}">
+          <!-- <td colspan="4">&nbsp;</td> -->
+              <table width="840" border="0" align="center" cellpadding="25" cellspacing="10">
+                <tr>
+                  <td>
+                    <div align="center">
+                      <div align = "center">
+                          <input type="checkbox" name="checkboxTerms" id="checkbox"/>
+                          <label for="checkboxTerms">I accept the terms of the study stated above</label>
+                          <br><br>
+                      <button type="submit" name="Start-button" class="btn btn-primary">Start</button>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+        </form>
+      </table>
+    </div>
+  </body>
+
+</html>
