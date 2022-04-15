@@ -17,8 +17,8 @@ from wtforms.fields import StringField, SubmitField, RadioField
 from wtforms import validators
 
 
-NUM_CHARTS_INSTR = 3
-NUM_CHARTS_TASK = 35
+NUM_CHARTS_INSTR = 1
+NUM_CHARTS_TASK = 5
 NUM_CHARTS_BETWEEN_BREAKS = 10000
 ERRORS_ALLOWED_INSTR = 100
 
@@ -164,9 +164,9 @@ charts_task = [  #0 CLUSTERS BLUES
 def read_coords_value(CoordX, CoordY, data):
     #read data from file
     #WEB
-    dades = pd.read_csv('/home/middeline/mysite/static/data/'+data+'.csv', delimiter=',',  header=None)
+    #dades = pd.read_csv('/home/middeline/mysite/static/data/'+data+'.csv', delimiter=',',  header=None)
     #EN LOCAL
-    #dades = pd.read_csv('static/data/'+data+'.csv', delimiter=',',  header=None)
+    dades = pd.read_csv('static/data/'+data+'.csv', delimiter=',',  header=None)
     heatmap = np.asarray(dades)
 
     #57 * 32 offset start
@@ -624,7 +624,8 @@ def task(question_id):
         C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
         DICT_USERS.close()
-        return render_template("task.html", img_name=img_name,img_marked=img_marked, question_id=question_id, C_valClick=C_valClick, user=user)
+        progress = int((float(question_id)/float(NUM_CHARTS_TASK))*100.0)
+        return render_template("task.html", img_name=img_name,img_marked=img_marked, question_id=question_id, progress=progress, C_valClick=C_valClick, user=user)
 
 
 @app.route('/validateTask/<int:question_id>', methods=['POST','GET'])
@@ -700,7 +701,9 @@ def saveAnswersTask(question_id):
                     C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
                     DICT_USERS.close()
-                    return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, user=user,
+                    progress = int((float(question_id)/float(NUM_CHARTS_TASK))*100.0)
+
+                    return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, progress=progress, user=user,
                                             error=ERROR_HEATMAP_BOUNDS)
             else:
                 img_name = DICT_USERS[str(user)][1][question_id].chart
@@ -708,7 +711,8 @@ def saveAnswersTask(question_id):
                 C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
                 DICT_USERS.close()
-                return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, user=user,
+                progress = int((float(question_id)/float(NUM_CHARTS_TASK))*100.0)
+                return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, progress=progress, user=user,
                                         error=CLICK_ON_PHOTO)
 
     img_name = DICT_USERS[str(user)][1][question_id].chart
@@ -716,7 +720,8 @@ def saveAnswersTask(question_id):
     C_valClick = DICT_USERS[str(user)][1][question_id].C_valClick
 
     DICT_USERS.close()
-    return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, user=user,
+    progress = int((float(question_id)/float(NUM_CHARTS_TASK))*100.0)
+    return render_template("task.html", img_name=img_name, img_marked=img_marked, C_valClick=C_valClick, question_id=question_id, progress=progress, user=user,
                             error=ERROR_VALUES)
 
 
